@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Group Buy Market Next UI
 
-## Getting Started
+一个用于联调本地商城与拼团交易系统的 Next.js 前端项目。
 
-First, run the development server:
+当前前端只直连商城后端：
+
+- 商城接口：`http://127.0.0.1:8070`
+- 拼团交易系统：由商城后端继续调用，不在前端直连
+
+## 技术栈
+
+- Next.js App Router
+- TypeScript
+- Tailwind CSS
+- TanStack Query
+- Zustand
+- React Hook Form
+- Zod
+- Sonner
+
+## 已完成页面
+
+- `/login`：邮箱 / 手机号验证码登录
+- `/`：首页与商品导览
+- `/products/9890001`：商品详情、开团、参团、mock 支付
+- `/orders`：订单列表与退款入口
+
+## 本地运行
+
+1. 确保商城项目已经启动在 `8070`
+2. 安装依赖
+3. 启动前端
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+默认访问：
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 环境变量
 
-## Learn More
+项目默认读取：
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+NEXT_PUBLIC_MALL_API_URL=http://127.0.0.1:8070
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+如果需要新增环境文件，可以参考：
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `.env.local.example`
 
-## Deploy on Vercel
+## 联调流程
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. 登录页发送验证码
+2. 使用固定验证码 `123456` 登录
+3. 进入商品详情页创建订单
+4. 在支付弹层里确认 mock 支付
+5. 到订单页查看 `PAY_SUCCESS / DEAL_DONE`
+6. 需要时发起退款
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 说明
+
+- 当前项目是联调版 UI，重点是打通下单、拼团、支付、订单状态与退款流程
+- 不接微信 / 支付宝真实前端 SDK
+- 支付确认按钮调用的是商城 mock 支付成功接口
