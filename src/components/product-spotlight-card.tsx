@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ArrowRight, TimerReset } from "lucide-react";
 import type { FeaturedProduct } from "@/lib/catalog";
 

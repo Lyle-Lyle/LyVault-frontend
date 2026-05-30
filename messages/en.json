@@ -1,0 +1,53 @@
+{
+  "Locale": {
+    "zh": "简体中文",
+    "en": "English"
+  },
+  "Header": {
+    "language": "Language",
+    "location": "GTA Area",
+    "discover": "Discover",
+    "searchPlaceholder": "Reserved for search and group-buy discovery. You can turn this into search, hot keywords, or category filters later.",
+    "workspaceLabel": "Workspace",
+    "workspaceSummary": "Create group buys, manage campaigns, handle payments, and close orders",
+    "commonFeatures": "Common Features",
+    "account": "Account",
+    "logout": "Log out",
+    "login": "Log in",
+    "myHome": "My Home",
+    "myHomeNote": "View leader profile and active group buys",
+    "hotTags": {
+      "weeklyHot": "Weekly hot",
+      "newUser": "New user",
+      "limitedGroup": "Limited deals",
+      "localPickup": "Local pickup"
+    },
+    "categories": {
+      "all": "All Categories",
+      "snacks": "Snacks",
+      "pantry": "Instant & Pantry",
+      "drinks": "Drinks",
+      "beauty": "Beauty",
+      "personalCare": "Personal Care",
+      "home": "Home",
+      "health": "Health",
+      "baby": "Baby Food",
+      "gifts": "Gift Guide",
+      "leaders": "Local Leaders"
+    },
+    "nav": {
+      "createGroupBuy": "Create Group Buy",
+      "createGroupBuyNote": "Start a new campaign quickly",
+      "myCreatedGroupBuys": "My Created Groups",
+      "myCreatedGroupBuysNote": "View activities and management tools",
+      "myJoinedGroupBuys": "Joined Groups",
+      "myJoinedGroupBuysNote": "View joined records and activity links",
+      "myOrders": "My Orders",
+      "myOrdersNote": "Confirm delivery and track status",
+      "incomeAnalysis": "Income Analysis",
+      "incomeAnalysisNote": "Revenue details and user data",
+      "settings": "Settings",
+      "settingsNote": "Leader and member feature settings"
+    }
+  }
+}

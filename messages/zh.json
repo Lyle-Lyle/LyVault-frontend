@@ -1,0 +1,53 @@
+{
+  "Locale": {
+    "zh": "简体中文",
+    "en": "English"
+  },
+  "Header": {
+    "language": "语言",
+    "location": "GTA 地区",
+    "discover": "发现",
+    "searchPlaceholder": "这里先预留给搜索 / 团购发现入口，后面你可以改成搜索栏、热词、分类切换",
+    "workspaceLabel": "当前工作区",
+    "workspaceSummary": "拼团创建、活动管理、参团支付、订单闭环",
+    "commonFeatures": "常用功能",
+    "account": "账户",
+    "logout": "退出登录",
+    "login": "登录",
+    "myHome": "我的主页",
+    "myHomeNote": "查看团长主页与在开团购",
+    "hotTags": {
+      "weeklyHot": "本周热门",
+      "newUser": "新人首单",
+      "limitedGroup": "限时团",
+      "localPickup": "本地自提"
+    },
+    "categories": {
+      "all": "全部分类",
+      "snacks": "零食",
+      "pantry": "速食粮油",
+      "drinks": "饮料",
+      "beauty": "美妆",
+      "personalCare": "个护",
+      "home": "家居生活",
+      "health": "健康保健",
+      "baby": "母婴辅食",
+      "gifts": "礼盒指南",
+      "leaders": "本地团长"
+    },
+    "nav": {
+      "createGroupBuy": "创建拼团",
+      "createGroupBuyNote": "快速发起新活动",
+      "myCreatedGroupBuys": "我创建的团购",
+      "myCreatedGroupBuysNote": "查看活动与管理入口",
+      "myJoinedGroupBuys": "我参与的团购",
+      "myJoinedGroupBuysNote": "查看参团记录与活动入口",
+      "myOrders": "我的订单",
+      "myOrdersNote": "确认收货与状态追踪",
+      "incomeAnalysis": "收入分析",
+      "incomeAnalysisNote": "资金明细与用户数据",
+      "settings": "设置",
+      "settingsNote": "团长与团员功能配置"
+    }
+  }
+}

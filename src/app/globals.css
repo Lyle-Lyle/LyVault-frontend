@@ -9,7 +9,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-noto-sans-sc);
-  --font-display: var(--font-space-grotesk);
+  --font-display: var(--font-noto-sans-sc);
 }
 
 * {
@@ -28,7 +28,17 @@ body {
     radial-gradient(circle at top right, rgba(38, 96, 153, 0.16), transparent 22%),
     var(--background);
   color: var(--foreground);
-  font-family: var(--font-noto-sans-sc), sans-serif;
+  font-family:
+    "PingFang SC",
+    "Hiragino Sans GB",
+    "Microsoft YaHei",
+    "Noto Sans SC",
+    "Source Han Sans SC",
+    var(--font-noto-sans-sc),
+    sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {

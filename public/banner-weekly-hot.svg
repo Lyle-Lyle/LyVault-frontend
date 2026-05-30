@@ -1,0 +1,23 @@
+<svg width="1200" height="520" viewBox="0 0 1200 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="520" rx="40" fill="#F8F5EA"/>
+  <rect width="1200" height="520" rx="40" fill="url(#paint0_linear_660_2)"/>
+  <circle cx="824" cy="102" r="108" fill="#FFD6B1"/>
+  <circle cx="1028" cy="422" r="120" fill="#D9EDFF"/>
+  <text x="54" y="72" fill="#64748B" font-family="Arial, sans-serif" font-size="18" font-weight="700">本周热门团购</text>
+  <text x="54" y="152" fill="#0B1024" font-family="Arial, sans-serif" font-size="74" font-weight="900">湾区妈妈群都</text>
+  <text x="54" y="232" fill="#0B1024" font-family="Arial, sans-serif" font-size="74" font-weight="900">在拼的春季补</text>
+  <text x="54" y="312" fill="#0B1024" font-family="Arial, sans-serif" font-size="74" font-weight="900">货团</text>
+  <text x="54" y="382" fill="#475569" font-family="Arial, sans-serif" font-size="28" font-weight="500">抹茶零食 + 牛乳面包 + 火锅底料</text>
+  <text x="54" y="466" fill="#0B1024" font-family="Arial, sans-serif" font-size="34" font-weight="900">立即参团</text>
+  <rect x="54" y="474" width="154" height="5" rx="2.5" fill="#0B1024"/>
+  <image href="https://cdn.yamibuy.net/item/112f988ddd32a07f1c93b578a91c42a8_757x757.webp" x="598" y="58" width="250" height="250" preserveAspectRatio="xMidYMid meet"/>
+  <image href="https://cdn.yamibuy.net/item/2c9f9d3693fd0d7f4c70b50747adafbe_757x757.webp" x="786" y="148" width="276" height="276" preserveAspectRatio="xMidYMid meet"/>
+  <image href="https://cdn.yamibuy.net/item/b01da3a1cfc0377f08f1f947ab19e6dc_757x757.webp" x="930" y="60" width="206" height="206" preserveAspectRatio="xMidYMid meet"/>
+  <defs>
+    <linearGradient id="paint0_linear_660_2" x1="0" y1="0" x2="1200" y2="520" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF8EE"/>
+      <stop offset="0.45" stop-color="#FFFEFB"/>
+      <stop offset="1" stop-color="#EFF8FF"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,0 +1,11 @@
+<svg width="320" height="220" viewBox="0 0 320 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="220" rx="28" fill="#FFF1EB"/>
+  <circle cx="244" cy="70" r="54" fill="#FFD6C8"/>
+  <rect x="54" y="48" width="82" height="124" rx="22" fill="#FF8B5E"/>
+  <rect x="66" y="62" width="58" height="34" rx="10" fill="#FFF2E8"/>
+  <rect x="66" y="106" width="50" height="10" rx="5" fill="#FFD9C7"/>
+  <rect x="66" y="122" width="44" height="10" rx="5" fill="#FFD9C7"/>
+  <rect x="142" y="76" width="62" height="96" rx="18" fill="#FFD26B"/>
+  <rect x="154" y="90" width="38" height="26" rx="8" fill="#FFF7DE"/>
+  <text x="48" y="198" fill="#0B1024" font-family="Arial, sans-serif" font-size="24" font-weight="800">48H 快闪团</text>
+</svg>

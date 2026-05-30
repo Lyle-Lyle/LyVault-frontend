@@ -1,0 +1,14 @@
+<svg width="420" height="280" viewBox="0 0 420 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="420" height="280" rx="28" fill="#EAF7FF"/>
+  <circle cx="86" cy="84" r="52" fill="#CDEEFF"/>
+  <rect x="48" y="54" width="78" height="118" rx="20" fill="#F8FFF4"/>
+  <rect x="58" y="68" width="58" height="34" rx="10" fill="#D9F6D2"/>
+  <rect x="58" y="112" width="54" height="10" rx="5" fill="#E7FCDD"/>
+  <rect x="58" y="128" width="46" height="10" rx="5" fill="#E7FCDD"/>
+  <rect x="150" y="86" width="88" height="126" rx="22" fill="#FFE28C"/>
+  <rect x="164" y="102" width="58" height="32" rx="10" fill="#FFF9E5"/>
+  <rect x="164" y="144" width="52" height="10" rx="5" fill="#FFEFC0"/>
+  <rect x="164" y="160" width="40" height="10" rx="5" fill="#FFEFC0"/>
+  <text x="48" y="242" fill="#0B1024" font-family="Arial, sans-serif" font-size="30" font-weight="800">新人首单组合</text>
+  <text x="48" y="264" fill="#64748B" font-family="Arial, sans-serif" font-size="16">饼干 + 茶饮 + 早餐包</text>
+</svg>
