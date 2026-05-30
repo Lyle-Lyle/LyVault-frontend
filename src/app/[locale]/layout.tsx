@@ -3,6 +3,7 @@ import { Noto_Sans_SC } from "next/font/google";
 import { hasLocale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
+import { Analytics } from "@vercel/analytics/next";
 import { AppProviders } from "@/components/providers/app-providers";
 import { routing } from "@/i18n/routing";
 import "../globals.css";
@@ -37,6 +38,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider>
           <AppProviders>{children}</AppProviders>
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   );
