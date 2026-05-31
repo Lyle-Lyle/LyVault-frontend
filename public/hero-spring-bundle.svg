@@ -17,7 +17,7 @@
   <rect x="520" y="282" width="48" height="12" rx="6" fill="#FFE0A5"/>
   <rect x="176" y="340" width="456" height="116" rx="28" fill="#FFFFFF" fill-opacity="0.82"/>
   <rect x="200" y="370" width="144" height="48" rx="24" fill="#0B1024"/>
-  <text x="272" y="401" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="22" font-weight="700">春季补货团</text>
-  <text x="382" y="388" fill="#334155" font-family="Arial, sans-serif" font-size="22" font-weight="700">抹茶零食 / 牛乳面包 / 火锅底料</text>
-  <text x="382" y="416" fill="#64748B" font-family="Arial, sans-serif" font-size="18">示例图占位，后续可替换为接口返回商品图</text>
+  <text x="272" y="401" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="22" font-weight="700">Restock</text>
+  <text x="382" y="388" fill="#334155" font-family="Arial, sans-serif" font-size="22" font-weight="700">Snacks / milk bread / hot pot base</text>
+  <text x="382" y="416" fill="#64748B" font-family="Arial, sans-serif" font-size="18">Mock image placeholder for API product photos</text>
 </svg>

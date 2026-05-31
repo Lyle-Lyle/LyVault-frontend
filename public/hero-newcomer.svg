@@ -9,6 +9,6 @@
   <rect x="164" y="102" width="58" height="32" rx="10" fill="#FFF9E5"/>
   <rect x="164" y="144" width="52" height="10" rx="5" fill="#FFEFC0"/>
   <rect x="164" y="160" width="40" height="10" rx="5" fill="#FFEFC0"/>
-  <text x="48" y="242" fill="#0B1024" font-family="Arial, sans-serif" font-size="30" font-weight="800">新人首单组合</text>
-  <text x="48" y="264" fill="#64748B" font-family="Arial, sans-serif" font-size="16">饼干 + 茶饮 + 早餐包</text>
+  <text x="48" y="242" fill="#0B1024" font-family="Arial, sans-serif" font-size="30" font-weight="800">First-order bundle</text>
+  <text x="48" y="264" fill="#64748B" font-family="Arial, sans-serif" font-size="16">Cookies + tea + breakfast pack</text>
 </svg>

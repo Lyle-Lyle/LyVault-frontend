@@ -49,5 +49,217 @@
       "settings": "Settings",
       "settingsNote": "Leader and member feature settings"
     }
+  },
+  "CreateGroupBuy": {
+    "sidebar": {
+      "eyebrow": "Create Group Buy",
+      "title": "Set up products and variants first",
+      "description": "Organize the title, media, products, and SKU rules first so fulfillment stays tidy later.",
+      "introImages": "Intro images",
+      "products": "Products",
+      "currentSku": "Current SKU",
+      "pricingMode": "Pricing mode",
+      "fulfillment": "Fulfillment",
+      "account": "Account",
+      "notLoggedIn": "Not signed in"
+    },
+    "status": {
+      "title": "Pre-publish check",
+      "description": "Complete intro, settings, products, and pricing rules in order. Key status stays pinned on the left.",
+      "introReady": "Intro previewed",
+      "productCount": "Products {count}/{limit}",
+      "ruleCount": "Rules {count}"
+    },
+    "intro": {
+      "title": "Intro",
+      "action": "Video field reserved",
+      "titleLabel": "Title",
+      "imagesLabel": "Intro images",
+      "imageCount": "{count} added, recommended within 10",
+      "upload": "Upload images",
+      "localPreview": "Local files will generate previews first.",
+      "empty": "Add an intro image.",
+      "descriptionLabel": "Text description",
+      "defaultTemplate": "Default description template"
+    },
+    "groupRules": {
+      "title": "Group Rules",
+      "action": "Control participant thresholds and success rules",
+      "pricingMode": "Pricing mode",
+      "requiredParticipants": "Required participants",
+      "maxParticipants": "Maximum participants"
+    },
+    "settings": {
+      "title": "Group Buy Settings",
+      "action": "Configure fulfillment, timing, and notifications here",
+      "logisticsMethod": "Fulfillment method",
+      "logisticsDescription": "Enable shipping, local delivery, or self pickup",
+      "logisticsHint": "Default fulfillment appears first on the order page",
+      "set": "Set",
+      "shipmentTime": "Shipment time",
+      "shipmentDescription": "Can be left empty and handled later in the management page",
+      "groupTime": "Group buy time",
+      "groupTimeDescription": "Participants can no longer join after the end time",
+      "notifyTarget": "Launch notification",
+      "notifyDescription": "Choose who receives a notification after publishing",
+      "moreSettings": "More settings",
+      "moreSettingsDescription": "Coupon, affiliate sale, and privacy settings",
+      "coupon": "Coupon",
+      "assistSale": "Affiliate sale",
+      "pickupAddress": "Pickup address",
+      "autoConfirmDays": "Auto-confirm days",
+      "deliveryRemark": "Delivery note"
+    },
+    "products": {
+      "title": "Group Buy Products",
+      "action": "{count}/{limit} products",
+      "description": "Recommended within {softLimit} products, maximum {hardLimit}. When there are many products, the left list stays pinned and the right side edits the selected product.",
+      "library": "Product library",
+      "addProduct": "Add product",
+      "productList": "Product list",
+      "productListHelp": "Click a product on the left to edit it",
+      "productIndex": "Product {index}",
+      "unnamed": "Unnamed product",
+      "uncategorized": "Uncategorized",
+      "specCount": "{count} variants",
+      "currentEditing": "Editing · Product {index}",
+      "copy": "Copy",
+      "delete": "Delete",
+      "complete": "Complete",
+      "incomplete": "Incomplete",
+      "missingVariants": "Missing variants"
+    },
+    "productEditor": {
+      "details": "Product Details",
+      "detailsHelp": "Name, category, and images decide what users see first.",
+      "imageCount": "{count}/{limit} images",
+      "name": "Product name",
+      "nameHint": "{count}/{limit}, recommended within 28 characters",
+      "category": "Product category",
+      "categoryTip": "Choose an existing category for product library management, filtering, and group-buy display.",
+      "selectCategory": "Select category",
+      "price": "Price",
+      "priceTip": "Base group-buy price. Each SKU can have its own price after variants are enabled.",
+      "costPrice": "Cost price",
+      "costPriceTip": "Only used by the leader to estimate profit. It is not shown to buyers.",
+      "description": "Product description",
+      "descriptionPlaceholder": "Enter product details"
+    },
+    "productImages": {
+      "label": "Product images",
+      "count": "{count}/{limit}, first image is the cover",
+      "upload": "Upload images",
+      "remaining": "Up to {count} more",
+      "cover": "Cover",
+      "empty": "Add a product image. The first image will be used as the cover.",
+      "alt": "Product image {index}",
+      "maxError": "Up to {limit} product images",
+      "trimmed": "Only {count} more can be added, so the first {count} files were used"
+    },
+    "variants": {
+      "title": "Variants",
+      "description": "Variant types are customizable. SKUs are generated from all variant combinations.",
+      "manage": "Manage",
+      "addType": "Add variant type",
+      "commonTypes": "Choose common variant types",
+      "type": "Variant type",
+      "valueImages": "Variant value images",
+      "values": "Variant values",
+      "add": "Add",
+      "details": "Detailed Variants",
+      "defaultPath": "Default variant",
+      "showSkuCode": "Show SKU code",
+      "bulkSetup": "Bulk setup",
+      "selectVariants": "Select variants",
+      "all": "All",
+      "noVariants": "This product has no variants. Changes will apply to the default variant.",
+      "bulkPricePlaceholder": "Bulk price",
+      "bulkCostPlaceholder": "Bulk cost",
+      "bulkStockPlaceholder": "Bulk stock",
+      "applySelected": "Apply to selected",
+      "combination": "Variant combination",
+      "stock": "Stock",
+      "skuCode": "SKU code",
+      "default": "Default",
+      "enter": "Enter",
+      "unlimited": "Unlimited",
+      "optional": "Optional"
+    },
+    "priceRules": {
+      "title": "Pricing Rules",
+      "action": "Used to match the activity price during checkout",
+      "add": "Add rule",
+      "rule": "Rule",
+      "threshold": "Participants needed",
+      "price": "Group price"
+    },
+    "options": {
+      "notifyAll": "All subscribers",
+      "notifyJoined": "Joined users",
+      "notifyNone": "Do not notify",
+      "privacyPublic": "Public",
+      "privacyLinkOnly": "Link only"
+    },
+    "defaults": {
+      "title": "Weekend dessert group buy",
+      "introText": "Preorder group. Delivery starts after the seller receives the items. Please watch messages and pick up promptly after delivery.",
+      "deliveryNote": "Deliver to the pickup point downstairs",
+      "pickupAddress": "Dorm building pickup point",
+      "deliveryRemark": "When there are multiple orders in the same building, notify by building."
+    },
+    "sampleProduct": {
+      "name": "Dual Dessert Combo",
+      "category": "More Picks",
+      "description": "Choose from sticky rice, taro paste, and custom cheese flavors.",
+      "specGroupOne": "Topping",
+      "specValueOne": "Sticky rice",
+      "specValueTwo": "Taro paste",
+      "specGroupTwo": "Cheese flavor",
+      "specValueThree": "Mango pomelo",
+      "specValueFour": "Jasmine grape"
+    },
+    "labels": {
+      "pricingEarlyBird": "Early-bird tiered pricing",
+      "pricingTiered": "Participant tiered pricing",
+      "pricingSuccessOnly": "Success after minimum participants",
+      "fulfillmentDelivery": "Merchant delivery",
+      "fulfillmentSelfPickup": "Self pickup",
+      "logisticsLocalBase": "Local delivery · Base shipping",
+      "logisticsSelfPickup": "Self pickup",
+      "logisticsExpress": "Express shipping"
+    },
+    "tips": {
+      "bulkPrice": "Sales price applied to selected variants.",
+      "bulkCostPrice": "Used for profit calculation only and not shown to buyers.",
+      "bulkStock": "Blank values do not overwrite current stock. Blank SKU stock is treated as unlimited."
+    },
+    "actions": {
+      "submit": "Submit",
+      "viewMine": "View my group buys"
+    }
+  },
+  "HomePage": {
+    "globalBuy": "Global Picks",
+    "perks": {
+      "freeShipping": "Free shipping over $49",
+      "localShipping": "GTA local shipping",
+      "sameDay": "Ships same day",
+      "authentic": "Authentic products"
+    },
+    "viewAll": "View all",
+    "joinedCount": "{count} joined",
+    "localShelfRecommendation": "Recommended community groups near {postalPrefix}",
+    "almostFull": {
+      "title": "Almost Full",
+      "description": "High-converting groups that only need a few more people, with bundled products shown up front.",
+      "badge": "Only one more might complete it",
+      "recent": "Recent joins",
+      "joinNow": "Join Now"
+    },
+    "explore": {
+      "title": "Explore More",
+      "button": "View all group buys",
+      "more": "Explore more"
+    }
   }
 }

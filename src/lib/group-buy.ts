@@ -7,6 +7,15 @@ export const ACTIVITY_STATUS_LABELS: Record<string, string> = {
   CLOSED: "已关闭",
 };
 
+export const ACTIVITY_STATUS_LABELS_EN: Record<string, string> = {
+  WAITING_JOIN: "Recruiting",
+  GROUP_SUCCESS: "Group formed",
+  SELLER_SHIPPED: "Shipped",
+  WAIT_RECEIPT_CONFIRM: "Awaiting receipt",
+  DONE: "Completed",
+  CLOSED: "Closed",
+};
+
 export const ORDER_STATUS_LABELS: Record<string, string> = {
   CREATE: "已创建",
   PAY_WAIT: "待支付",
@@ -16,9 +25,23 @@ export const ORDER_STATUS_LABELS: Record<string, string> = {
   CLOSE: "已关闭",
 };
 
+export const ORDER_STATUS_LABELS_EN: Record<string, string> = {
+  CREATE: "Created",
+  PAY_WAIT: "Awaiting payment",
+  PAY_SUCCESS: "Paid",
+  MARKET: "Settling",
+  DEAL_DONE: "Completed",
+  CLOSE: "Closed",
+};
+
 export const FULFILLMENT_LABELS: Record<string, string> = {
   DELIVERY: "商家配送",
   SELF_PICKUP: "到店自提",
+};
+
+export const FULFILLMENT_LABELS_EN: Record<string, string> = {
+  DELIVERY: "Delivery",
+  SELF_PICKUP: "Self pickup",
 };
 
 export const PRICING_MODE_LABELS: Record<string, string> = {
@@ -27,20 +50,30 @@ export const PRICING_MODE_LABELS: Record<string, string> = {
   "3": "满员成团",
 };
 
+export const PRICING_MODE_LABELS_EN: Record<string, string> = {
+  "1": "Early-bird tiered pricing",
+  "2": "Participant tiered pricing",
+  "3": "Minimum participants",
+};
+
+function isEnglishLocale() {
+  return typeof window !== "undefined" && window.location.pathname.startsWith("/en");
+}
+
 export function getActivityStatusLabel(status: string) {
-  return ACTIVITY_STATUS_LABELS[status] ?? status;
+  return (isEnglishLocale() ? ACTIVITY_STATUS_LABELS_EN : ACTIVITY_STATUS_LABELS)[status] ?? status;
 }
 
 export function getOrderStatusLabel(status: string) {
-  return ORDER_STATUS_LABELS[status] ?? status;
+  return (isEnglishLocale() ? ORDER_STATUS_LABELS_EN : ORDER_STATUS_LABELS)[status] ?? status;
 }
 
 export function getFulfillmentLabel(type: string) {
-  return FULFILLMENT_LABELS[type] ?? type;
+  return (isEnglishLocale() ? FULFILLMENT_LABELS_EN : FULFILLMENT_LABELS)[type] ?? type;
 }
 
 export function getPricingModeLabel(mode: number | string) {
-  return PRICING_MODE_LABELS[String(mode)] ?? String(mode);
+  return (isEnglishLocale() ? PRICING_MODE_LABELS_EN : PRICING_MODE_LABELS)[String(mode)] ?? String(mode);
 }
 
 export function canConfirmReceipt(status: string) {

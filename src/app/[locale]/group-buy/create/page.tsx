@@ -2,6 +2,7 @@
 
 import { Link, useRouter } from "@/i18n/navigation";
 import { useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -43,7 +44,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { createGroupBuy, queryGroupBuyProductLibrary } from "@/lib/api/mall";
 import type { GroupBuyProduct, GroupBuySku, GroupBuySkuSpecValue, GroupBuySpecGroup } from "@/lib/api/types";
-import { getFulfillmentLabel, getPricingModeLabel } from "@/lib/group-buy";
 import { useSessionStore } from "@/store/session-store";
 
 const priceRuleSchema = z.object({
@@ -108,6 +108,8 @@ type CommonSpecGroup = {
   values: string[];
 };
 
+type CreateGroupBuyTranslator = ReturnType<typeof useTranslations>;
+
 type LogisticsMethod = "EXPRESS" | "LOCAL_DELIVERY" | "SELF_PICKUP";
 type FreightTemplate = "BASE" | "FREE_BY_AMOUNT" | "FREE_BY_QUANTITY";
 type FreightPayScope = "EVERY_ORDER" | "FIRST_ORDER";
@@ -128,14 +130,14 @@ const PRODUCT_NAME_LIMIT = 120;
 const PRODUCT_DESC_LIMIT = 2000;
 
 const PRODUCT_CATEGORY_OPTIONS = [
-  { id: "cat-more", name: "更多好货" },
-  { id: "cat-food", name: "零食" },
-  { id: "cat-fast-food", name: "速食粮油" },
-  { id: "cat-drink", name: "饮料" },
-  { id: "cat-beauty", name: "美妆个护" },
-  { id: "cat-home", name: "家居生活" },
-  { id: "cat-health", name: "健康保健" },
-  { id: "cat-gift", name: "礼盒指南" },
+  { id: "cat-more", name: "更多好货", nameEn: "More Picks" },
+  { id: "cat-food", name: "零食", nameEn: "Snacks" },
+  { id: "cat-fast-food", name: "速食粮油", nameEn: "Instant & Pantry" },
+  { id: "cat-drink", name: "饮料", nameEn: "Drinks" },
+  { id: "cat-beauty", name: "美妆个护", nameEn: "Beauty & Personal Care" },
+  { id: "cat-home", name: "家居生活", nameEn: "Home" },
+  { id: "cat-health", name: "健康保健", nameEn: "Health" },
+  { id: "cat-gift", name: "礼盒指南", nameEn: "Gift Guide" },
 ];
 
 const DEFAULT_INTRO_TEXT = `⭐预定团，下一次老板出摊后配送
@@ -148,17 +150,6 @@ const DEFAULT_INTRO_TEXT = `⭐预定团，下一次老板出摊后配送
 ❤️若计划有变不想要了，必须提前电话告知再申请退款，出餐后无法退款！
 
 裹粉柠檬薄脆已下架`;
-
-const NOTIFY_TARGET_OPTIONS = [
-  { value: "ALL_SUBSCRIBERS", label: "全部订阅成员" },
-  { value: "JOINED_USERS", label: "已参团成员" },
-  { value: "NONE", label: "暂不推送" },
-];
-
-const PRIVACY_MODE_OPTIONS = [
-  { value: "PUBLIC", label: "公开可见" },
-  { value: "LINK_ONLY", label: "仅链接可见" },
-];
 
 const LOGISTICS_METHOD_OPTIONS: Array<{
   value: LogisticsMethod;
@@ -192,55 +183,56 @@ const RECEIVER_FIELD_OPTIONS: Array<{ value: ReceiverField; label: string }> = [
   { value: "ADDRESS", label: "地址" },
 ];
 
-const sampleProduct: ProductDraft = {
-  localId: "product-1",
-  productId: "",
-  sourceProductId: null,
-  productName: "八元双拼",
-  productImages: ["/hero-spring-bundle.svg"],
-  coverImageUrl: "/hero-spring-bundle.svg",
-  price: 8,
-  costPrice: 5,
-  categoryId: "",
-  categoryName: "更多好货",
-  productDesc: "小料可选血糯米、芋泥，奶酪口味可自定义。",
-  videoUrl: "",
-  displayOrder: 1,
-  status: "ACTIVE",
-  specGroups: [
-    {
-      specGroupName: "小料",
-      imageRequired: false,
-      displayOrder: 1,
-      specValues: [
-        { valueName: "血糯米", displayOrder: 1 },
-        { valueName: "芋泥", displayOrder: 2 },
-      ],
-    },
-    {
-      specGroupName: "奶酪口味",
-      imageRequired: false,
-      displayOrder: 2,
-      specValues: [
-        { valueName: "杨枝甘露", displayOrder: 1 },
-        { valueName: "茉莉青提", displayOrder: 2 },
-      ],
-    },
-  ],
-  skus: [],
-  bulkPrice: "8",
-  bulkCostPrice: "5",
-  bulkStock: "100",
-};
+function createSampleProduct(t: CreateGroupBuyTranslator): ProductDraft {
+  return {
+    localId: "product-1",
+    productId: "",
+    sourceProductId: null,
+    productName: t("sampleProduct.name"),
+    productImages: ["/mock-products/family-pantry.png"],
+    coverImageUrl: "/mock-products/family-pantry.png",
+    price: 8,
+    costPrice: 5,
+    categoryId: "cat-more",
+    categoryName: t("sampleProduct.category"),
+    productDesc: t("sampleProduct.description"),
+    videoUrl: "",
+    displayOrder: 1,
+    status: "ACTIVE",
+    specGroups: [
+      {
+        specGroupName: t("sampleProduct.specGroupOne"),
+        imageRequired: false,
+        displayOrder: 1,
+        specValues: [
+          { valueName: t("sampleProduct.specValueOne"), displayOrder: 1 },
+          { valueName: t("sampleProduct.specValueTwo"), displayOrder: 2 },
+        ],
+      },
+      {
+        specGroupName: t("sampleProduct.specGroupTwo"),
+        imageRequired: false,
+        displayOrder: 2,
+        specValues: [
+          { valueName: t("sampleProduct.specValueThree"), displayOrder: 1 },
+          { valueName: t("sampleProduct.specValueFour"), displayOrder: 2 },
+        ],
+      },
+    ],
+    skus: [],
+    bulkPrice: "8",
+    bulkCostPrice: "5",
+    bulkStock: "100",
+  };
+}
 
 export default function GroupBuyCreatePage() {
+  const t = useTranslations("CreateGroupBuy");
+  const locale = useLocale();
   const router = useRouter();
   const session = useSessionStore((state) => state.session);
-  const [introImages, setIntroImages] = useState<UploadedImage[]>([
-    { id: "intro-1", url: "/banner-weekly-hot.svg", name: "banner-weekly-hot.svg" },
-    { id: "intro-2", url: "/hero-newcomer.svg", name: "hero-newcomer.svg" },
-  ]);
-  const [products, setProducts] = useState<ProductDraft[]>(() => [withGeneratedSkus(sampleProduct)]);
+  const [introImages, setIntroImages] = useState<UploadedImage[]>([]);
+  const [products, setProducts] = useState<ProductDraft[]>(() => [withGeneratedSkus(createSampleProduct(t))]);
   const [activeProductId, setActiveProductId] = useState("product-1");
   const [libraryKeyword, setLibraryKeyword] = useState("");
   const [libraryItems, setLibraryItems] = useState<GroupBuyProduct[]>([]);
@@ -251,8 +243,8 @@ export default function GroupBuyCreatePage() {
   const form = useForm<FormInput, unknown, FormOutput>({
     resolver: zodResolver(schema),
     defaultValues: {
-      title: "周末甜品团",
-      introText: DEFAULT_INTRO_TEXT,
+      title: t("defaults.title"),
+      introText: locale === "en" ? t("defaults.introText") : DEFAULT_INTRO_TEXT,
       pricingMode: 3,
       requiredParticipantCount: 2,
       maxParticipantCount: 50,
@@ -267,11 +259,11 @@ export default function GroupBuyCreatePage() {
       freeShippingQuantity: "",
       freightQuantityStep: "1",
       freightStepAmount: "2",
-      deliveryNote: "配送到宿舍楼下",
+      deliveryNote: t("defaults.deliveryNote"),
       receiverFields: ["CONTACT", "PHONE", "ADDRESS"],
       customReceiverFields: [],
-      pickupAddress: "宿舍楼下自提点",
-      deliveryRemark: "同一栋楼有多个订单时，按楼栋通知取餐。",
+      pickupAddress: t("defaults.pickupAddress"),
+      deliveryRemark: t("defaults.deliveryRemark"),
       autoConfirmDays: 3,
       shipmentTime: "",
       groupStartTime: toDatetimeLocalInput(new Date()),
@@ -359,7 +351,29 @@ export default function GroupBuyCreatePage() {
     control: form.control,
     name: "customReceiverFields",
   }) as string[] | undefined;
-  const logisticsSummary = formatLogisticsSummary(logisticsMethod, freightTemplate);
+  const logisticsSummary =
+    logisticsMethod === "SELF_PICKUP"
+      ? t("labels.logisticsSelfPickup")
+      : logisticsMethod === "EXPRESS"
+        ? t("labels.logisticsExpress")
+        : t("labels.logisticsLocalBase");
+  const notifyTargetOptions = [
+    { value: "ALL_SUBSCRIBERS", label: t("options.notifyAll") },
+    { value: "JOINED_USERS", label: t("options.notifyJoined") },
+    { value: "NONE", label: t("options.notifyNone") },
+  ];
+  const privacyModeOptions = [
+    { value: "PUBLIC", label: t("options.privacyPublic") },
+    { value: "LINK_ONLY", label: t("options.privacyLinkOnly") },
+  ];
+  const pricingModeLabel =
+    pricingMode === 1
+      ? t("labels.pricingEarlyBird")
+      : pricingMode === 2
+        ? t("labels.pricingTiered")
+        : t("labels.pricingSuccessOnly");
+  const fulfillmentLabel =
+    fulfillmentType === "DELIVERY" ? t("labels.fulfillmentDelivery") : t("labels.fulfillmentSelfPickup");
 
   const activeProduct = useMemo(
     () => products.find((product) => product.localId === activeProductId) ?? products[0],
@@ -816,32 +830,30 @@ export default function GroupBuyCreatePage() {
       <section className="grid gap-5 xl:grid-cols-[300px_1fr]">
         <aside className="h-fit overflow-hidden rounded-lg border border-slate-200 bg-white shadow-[0_18px_45px_-34px_rgba(15,23,42,0.65)] ring-1 ring-white/80 xl:sticky xl:top-24">
           <div className="border-b border-[#FFD3C2] bg-[#FFE7D9] p-4 text-[#7A2E1D]">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#D94D2A]">Create group buy</p>
-            <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-950">把商品和规格先搭稳</h1>
-            <p className="mt-3 text-sm leading-6 text-[#8A4A37]">
-              先把标题、图文、商品和 SKU 规则整理清楚，后面发货和收货才不会乱。
-            </p>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#D94D2A]">{t("sidebar.eyebrow")}</p>
+            <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-950">{t("sidebar.title")}</h1>
+            <p className="mt-3 text-sm leading-6 text-[#8A4A37]">{t("sidebar.description")}</p>
           </div>
 
           <div className="grid grid-cols-3 border-b border-slate-200 bg-slate-50 text-center">
             <div className="px-2 py-3">
               <div className="text-lg font-black text-slate-950">{introImages.length}</div>
-              <div className="mt-0.5 text-[11px] font-semibold text-slate-500">介绍图</div>
+              <div className="mt-0.5 text-[11px] font-semibold text-slate-500">{t("sidebar.introImages")}</div>
             </div>
             <div className="border-x border-slate-200 px-2 py-3">
               <div className="text-lg font-black text-slate-950">{products.length}</div>
-              <div className="mt-0.5 text-[11px] font-semibold text-slate-500">商品</div>
+              <div className="mt-0.5 text-[11px] font-semibold text-slate-500">{t("sidebar.products")}</div>
             </div>
             <div className="px-2 py-3">
               <div className="text-lg font-black text-slate-950">{activeProduct?.skus.length ?? 0}</div>
-              <div className="mt-0.5 text-[11px] font-semibold text-slate-500">当前 SKU</div>
+              <div className="mt-0.5 text-[11px] font-semibold text-slate-500">{t("sidebar.currentSku")}</div>
             </div>
           </div>
 
           <div className="grid gap-2 p-4">
-            <InfoCard label="当前定价模式" value={getPricingModeLabel(pricingMode ?? 3)} />
-            <InfoCard label="履约方式" value={getFulfillmentLabel(fulfillmentType ?? "SELF_PICKUP")} />
-            <InfoCard label="当前账号" value={session?.account ?? "未登录"} />
+            <InfoCard label={t("sidebar.pricingMode")} value={pricingModeLabel} />
+            <InfoCard label={t("sidebar.fulfillment")} value={fulfillmentLabel} />
+            <InfoCard label={t("sidebar.account")} value={session?.account ?? t("sidebar.notLoggedIn")} />
           </div>
         </aside>
 
@@ -849,25 +861,33 @@ export default function GroupBuyCreatePage() {
           <div className="rounded-lg border border-[#FFD3C2] bg-white p-3 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <div className="text-sm font-black text-slate-950">发布前检查</div>
-                <div className="mt-1 text-xs leading-5 text-slate-500">建议按介绍、设置、商品、价格规则的顺序完成。左侧会一直保留关键状态。</div>
+                <div className="text-sm font-black text-slate-950">{t("status.title")}</div>
+                <div className="mt-1 text-xs leading-5 text-slate-500">{t("status.description")}</div>
               </div>
               <div className="flex flex-wrap gap-2 text-xs font-bold">
-                <span className="rounded-lg bg-[#FFF0E7] px-3 py-1.5 text-[#B83A1C] ring-1 ring-[#FFD3C2]">图文已预览</span>
-                <span className="rounded-lg bg-slate-50 px-3 py-1.5 text-slate-600 ring-1 ring-slate-200">商品 {products.length}/{PRODUCT_HARD_LIMIT}</span>
-                <span className="rounded-lg bg-slate-50 px-3 py-1.5 text-slate-600 ring-1 ring-slate-200">规则 {fields.length}</span>
+                <span className="rounded-lg bg-[#FFF0E7] px-3 py-1.5 text-[#B83A1C] ring-1 ring-[#FFD3C2]">{t("status.introReady")}</span>
+                <span className="rounded-lg bg-slate-50 px-3 py-1.5 text-slate-600 ring-1 ring-slate-200">{t("status.productCount", { count: products.length, limit: PRODUCT_HARD_LIMIT })}</span>
+                <span className="rounded-lg bg-slate-50 px-3 py-1.5 text-slate-600 ring-1 ring-slate-200">{t("status.ruleCount", { count: fields.length })}</span>
               </div>
             </div>
           </div>
 
           <section className={sectionClassName}>
-            <SectionTitle icon={<ImagePlus className="h-5 w-5" />} title="介绍" action="视频字段已预留" />
+            <SectionTitle icon={<ImagePlus className="h-5 w-5" />} title={t("intro.title")} action={t("intro.action")} />
             <div className="mt-4 space-y-4">
-              <Field label="标题" error={form.formState.errors.title?.message}>
+              <Field label={t("intro.titleLabel")} error={form.formState.errors.title?.message}>
                 <Input {...form.register("title")} className={inputClassName} />
               </Field>
-              <IntroImageUploader images={introImages} onChange={setIntroImages} />
-              <Field label="文字描述" hint={introTextIsTemplate ? "默认说明模板" : undefined} error={form.formState.errors.introText?.message}>
+              <IntroImageUploader
+                images={introImages}
+                onChange={setIntroImages}
+                label={t("intro.imagesLabel")}
+                countText={t("intro.imageCount", { count: introImages.length })}
+                uploadText={t("intro.upload")}
+                localPreviewText={t("intro.localPreview")}
+                emptyText={t("intro.empty")}
+              />
+              <Field label={t("intro.descriptionLabel")} hint={introTextIsTemplate ? t("intro.defaultTemplate") : undefined} error={form.formState.errors.introText?.message}>
                 <Textarea
                   {...form.register("introText")}
                   rows={10}
@@ -878,31 +898,31 @@ export default function GroupBuyCreatePage() {
           </section>
 
           <section className={sectionClassName}>
-            <SectionTitle icon={<Layers3 className="h-5 w-5" />} title="成团规则" action="控制人数门槛和成团方式" />
+            <SectionTitle icon={<Layers3 className="h-5 w-5" />} title={t("groupRules.title")} action={t("groupRules.action")} />
             <div className="mt-4 grid gap-3 md:grid-cols-3">
-              <Field label="定价模式" error={form.formState.errors.pricingMode?.message}>
+              <Field label={t("groupRules.pricingMode")} error={form.formState.errors.pricingMode?.message}>
                 <select {...form.register("pricingMode")} className={compactInputClassName}>
-                  <option value={1}>早鸟阶梯价</option>
-                  <option value={2}>按人数阶梯价</option>
-                  <option value={3}>满足人数才成功</option>
+                  <option value={1}>{t("labels.pricingEarlyBird")}</option>
+                  <option value={2}>{t("labels.pricingTiered")}</option>
+                  <option value={3}>{t("labels.pricingSuccessOnly")}</option>
                 </select>
               </Field>
-              <Field label="成团人数" error={form.formState.errors.requiredParticipantCount?.message}>
+              <Field label={t("groupRules.requiredParticipants")} error={form.formState.errors.requiredParticipantCount?.message}>
                 <Input type="number" {...form.register("requiredParticipantCount")} className={compactInputClassName} />
               </Field>
-              <Field label="最大人数" error={form.formState.errors.maxParticipantCount?.message}>
+              <Field label={t("groupRules.maxParticipants")} error={form.formState.errors.maxParticipantCount?.message}>
                 <Input type="number" {...form.register("maxParticipantCount")} className={compactInputClassName} />
               </Field>
             </div>
           </section>
 
           <section className={sectionClassName}>
-            <SectionTitle icon={<Settings2 className="h-5 w-5" />} title="团购设置" action="物流、时间和通知在这里统一配置" />
+            <SectionTitle icon={<Settings2 className="h-5 w-5" />} title={t("settings.title")} action={t("settings.action")} />
             <div className="mt-4 overflow-hidden rounded-lg border border-[#FFD3C2] bg-white">
               <SettingRow
                 icon={<Truck className="h-4 w-4" />}
-                label="物流方式"
-                description="可同时开启快递、同城配送、顾客自提"
+                label={t("settings.logisticsMethod")}
+                description={t("settings.logisticsDescription")}
               >
                 <button
                   type="button"
@@ -911,24 +931,24 @@ export default function GroupBuyCreatePage() {
                 >
                   <span>
                     <span className="font-bold text-slate-900">{logisticsSummary}</span>
-                    <span className="mt-0.5 block text-xs text-slate-500">默认物流会在下单页优先展示</span>
+                    <span className="mt-0.5 block text-xs text-slate-500">{t("settings.logisticsHint")}</span>
                   </span>
-                  <span className="shrink-0 text-xs font-bold text-[#D94D2A]">设置</span>
+                  <span className="shrink-0 text-xs font-bold text-[#D94D2A]">{t("settings.set")}</span>
                 </button>
               </SettingRow>
 
               <SettingRow
                 icon={<CalendarClock className="h-4 w-4" />}
-                label="发货时间"
-                description="可先留空，成团后再进入管理页处理"
+                label={t("settings.shipmentTime")}
+                description={t("settings.shipmentDescription")}
               >
                 <input type="datetime-local" {...form.register("shipmentTime")} className={settingInputClassName} />
               </SettingRow>
 
               <SettingRow
                 icon={<CalendarClock className="h-4 w-4" />}
-                label="团购时间"
-                description="到结束时间后停止继续参团"
+                label={t("settings.groupTime")}
+                description={t("settings.groupTimeDescription")}
               >
                 <div className="grid gap-2 sm:grid-cols-2">
                   <input type="datetime-local" {...form.register("groupStartTime")} className={settingInputClassName} />
@@ -938,11 +958,11 @@ export default function GroupBuyCreatePage() {
 
               <SettingRow
                 icon={<Bell className="h-4 w-4" />}
-                label="开团通知推送"
-                description="发布后通知哪些用户"
+                label={t("settings.notifyTarget")}
+                description={t("settings.notifyDescription")}
               >
                 <select {...form.register("notifyTarget")} className={settingSelectClassName}>
-                  {NOTIFY_TARGET_OPTIONS.map((option) => (
+                  {notifyTargetOptions.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>
@@ -952,20 +972,20 @@ export default function GroupBuyCreatePage() {
 
               <SettingRow
                 icon={<Settings2 className="h-4 w-4" />}
-                label="更多团购设置"
-                description="优惠设置、帮卖设置、隐私设置"
+                label={t("settings.moreSettings")}
+                description={t("settings.moreSettingsDescription")}
               >
                 <div className="grid gap-2 sm:grid-cols-3">
                   <label className={settingToggleClassName}>
                     <input type="checkbox" {...form.register("couponEnabled")} className="h-3.5 w-3.5 accent-[#FF724C]" />
-                    优惠
+                    {t("settings.coupon")}
                   </label>
                   <label className={settingToggleClassName}>
                     <input type="checkbox" {...form.register("assistSaleEnabled")} className="h-3.5 w-3.5 accent-[#FF724C]" />
-                    帮卖
+                    {t("settings.assistSale")}
                   </label>
                   <select {...form.register("privacyMode")} className={settingSelectClassName}>
-                    {PRIVACY_MODE_OPTIONS.map((option) => (
+                    {privacyModeOptions.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>
@@ -976,13 +996,13 @@ export default function GroupBuyCreatePage() {
             </div>
 
             <div className="mt-3 grid gap-3 md:grid-cols-3">
-              <Field label="自提地址">
+              <Field label={t("settings.pickupAddress")}>
                 <Input {...form.register("pickupAddress")} className={compactInputClassName} />
               </Field>
-              <Field label="自动确认天数" error={form.formState.errors.autoConfirmDays?.message}>
+              <Field label={t("settings.autoConfirmDays")} error={form.formState.errors.autoConfirmDays?.message}>
                 <Input type="number" {...form.register("autoConfirmDays")} className={compactInputClassName} />
               </Field>
-              <Field label="配送备注">
+              <Field label={t("settings.deliveryRemark")}>
                 <Input {...form.register("deliveryRemark")} className={compactInputClassName} />
               </Field>
             </div>
@@ -990,7 +1010,11 @@ export default function GroupBuyCreatePage() {
 
           <section className={sectionClassName}>
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <SectionTitle icon={<PackagePlus className="h-5 w-5" />} title="团购商品" action={`${products.length}/${PRODUCT_HARD_LIMIT} 个商品`} />
+              <SectionTitle
+                icon={<PackagePlus className="h-5 w-5" />}
+                title={t("products.title")}
+                action={t("products.action", { count: products.length, limit: PRODUCT_HARD_LIMIT })}
+              />
               <div className="flex flex-wrap gap-2">
                 <Button
                   type="button"
@@ -999,16 +1023,16 @@ export default function GroupBuyCreatePage() {
                   onClick={() => setShowProductLibrary((current) => !current)}
                 >
                   <Search className="h-4 w-4" />
-                  商品库
+                  {t("products.library")}
                 </Button>
                 <button type="button" onClick={() => addProduct()} disabled={products.length >= PRODUCT_HARD_LIMIT} className={compactSecondaryButtonClassName}>
                   <Plus className="h-4 w-4" />
-                  添加商品
+                  {t("products.addProduct")}
                 </button>
               </div>
             </div>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-500">
-              建议控制在 {PRODUCT_SOFT_LIMIT} 个以内，最多 {PRODUCT_HARD_LIMIT} 个。商品较多时左侧清单固定定位，右侧只编辑当前商品。
+              {t("products.description", { softLimit: PRODUCT_SOFT_LIMIT, hardLimit: PRODUCT_HARD_LIMIT })}
             </p>
 
             {showProductLibrary ? (
@@ -1055,8 +1079,8 @@ export default function GroupBuyCreatePage() {
                 <div className="border-b border-slate-200 bg-white p-3">
                   <div className="flex items-center justify-between gap-3 px-1">
                     <div>
-                      <div className="text-sm font-black text-slate-950">商品清单</div>
-                      <div className="mt-1 text-xs text-slate-500">点击左侧商品切换编辑</div>
+                      <div className="text-sm font-black text-slate-950">{t("products.productList")}</div>
+                      <div className="mt-1 text-xs text-slate-500">{t("products.productListHelp")}</div>
                     </div>
                     <span className="rounded-lg bg-white px-2 py-1 text-xs font-bold text-slate-500 ring-1 ring-slate-200">
                       {products.length}/{PRODUCT_HARD_LIMIT}
@@ -1065,7 +1089,7 @@ export default function GroupBuyCreatePage() {
                 </div>
                 <div className="max-h-[calc(100vh-220px)] space-y-2 overflow-y-auto p-3">
                   {products.map((product, index) => {
-                    const status = getProductStatus(product);
+                    const status = getProductStatus(product, t);
                     const selected = activeProduct?.localId === product.localId;
                     return (
                       <div
@@ -1086,12 +1110,12 @@ export default function GroupBuyCreatePage() {
                             )}
                           </div>
                           <div className="min-w-0 flex-1">
-                            <div className="text-xs font-semibold text-slate-500">商品 {index + 1}</div>
+                            <div className="text-xs font-semibold text-slate-500">{t("products.productIndex", { index: index + 1 })}</div>
                             <div className={`mt-1 truncate text-sm font-black ${selected ? "text-[#B83A1C]" : "text-slate-900"}`}>
-                              {product.productName || "未命名商品"}
+                              {product.productName || t("products.unnamed")}
                             </div>
                             <div className="mt-1 truncate text-xs text-slate-500">
-                              ¥{product.price || 0} · {product.categoryName || "未分类"} · {product.skus.length || 1} 个规格
+                              ¥{product.price || 0} · {product.categoryName || t("products.uncategorized")} · {t("products.specCount", { count: product.skus.length || 1 })}
                             </div>
                             <div className={`mt-2 inline-flex rounded-lg px-2 py-0.5 text-xs font-bold ${status.className}`}>{status.label}</div>
                           </div>
@@ -1105,7 +1129,7 @@ export default function GroupBuyCreatePage() {
                           <DropdownMenuContent align="end" className="rounded-lg">
                             <DropdownMenuItem onSelect={() => duplicateProduct(product.localId)}>
                               <Copy className="h-4 w-4" />
-                              复制商品
+                              {t("products.copy")}
                             </DropdownMenuItem>
                             <DropdownMenuItem disabled={index === 0} onSelect={() => moveProduct(product.localId, -1)}>
                               <ArrowUp className="h-4 w-4" />
@@ -1118,7 +1142,7 @@ export default function GroupBuyCreatePage() {
                             <DropdownMenuSeparator />
                             <DropdownMenuItem disabled={products.length === 1} onSelect={() => removeProduct(product.localId)} className="text-red-600 focus:text-red-700">
                               <Trash2 className="h-4 w-4" />
-                              删除商品
+                              {t("products.delete")}
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -1133,13 +1157,15 @@ export default function GroupBuyCreatePage() {
                   <>
                     <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[#FFD3C2] bg-[#FFE7D9] px-4 py-3">
                       <div>
-                        <div className="text-xs font-semibold text-[#D94D2A]">当前编辑 · 商品 {products.findIndex((product) => product.localId === activeProduct.localId) + 1}</div>
-                        <div className="mt-1 text-lg font-black text-slate-950">{activeProduct.productName || "未命名商品"}</div>
+                        <div className="text-xs font-semibold text-[#D94D2A]">
+                          {t("products.currentEditing", { index: products.findIndex((product) => product.localId === activeProduct.localId) + 1 })}
+                        </div>
+                        <div className="mt-1 text-lg font-black text-slate-950">{activeProduct.productName || t("products.unnamed")}</div>
                       </div>
                       <div className="flex flex-wrap gap-2">
                         <Button type="button" variant="secondary" className="h-8 rounded-lg border-[#FFD3C2] bg-white px-3 text-xs text-[#7A2E1D] hover:border-[#FF724C] hover:text-[#D94D2A]" onClick={() => duplicateProduct(activeProduct.localId)}>
                           <Copy className="h-4 w-4" />
-                          复制
+                          {t("products.copy")}
                         </Button>
                         <Button
                           type="button"
@@ -1149,7 +1175,7 @@ export default function GroupBuyCreatePage() {
                           disabled={products.length === 1}
                         >
                           <Trash2 className="h-4 w-4" />
-                          删除
+                          {t("products.delete")}
                         </Button>
                       </div>
                     </div>
@@ -1183,27 +1209,27 @@ export default function GroupBuyCreatePage() {
 
           <section className={sectionClassName}>
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <SectionTitle icon={<Wand2 className="h-5 w-5" />} title="价格规则" action="用于参团下单时匹配活动价格" />
+              <SectionTitle icon={<Wand2 className="h-5 w-5" />} title={t("priceRules.title")} action={t("priceRules.action")} />
               <button
                 type="button"
                 onClick={() => append({ thresholdPeople: fields.length + 2, price: products[0]?.price ?? 1 })}
                 className={compactSecondaryButtonClassName}
               >
                 <Plus className="h-4 w-4" />
-                添加规则
+                {t("priceRules.add")}
               </button>
             </div>
             <div className="mt-4 grid gap-3 md:grid-cols-2">
               {fields.map((field, index) => (
                 <div key={field.id} className="grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3 shadow-sm sm:grid-cols-[72px_1fr_1fr_auto]">
                   <div className="flex h-full min-h-16 flex-col justify-center rounded-lg bg-white px-3 text-center ring-1 ring-slate-200">
-                    <div className="text-xs font-bold text-slate-500">规则</div>
+                    <div className="text-xs font-bold text-slate-500">{t("priceRules.rule")}</div>
                     <div className="text-xl font-black text-slate-950">{index + 1}</div>
                   </div>
-                  <Field label="满几人成团" error={form.formState.errors.priceRules?.[index]?.thresholdPeople?.message}>
+                  <Field label={t("priceRules.threshold")} error={form.formState.errors.priceRules?.[index]?.thresholdPeople?.message}>
                     <input type="number" {...form.register(`priceRules.${index}.thresholdPeople`)} className={compactInputClassName} />
                   </Field>
-                  <Field label="团购价" error={form.formState.errors.priceRules?.[index]?.price?.message}>
+                  <Field label={t("priceRules.price")} error={form.formState.errors.priceRules?.[index]?.price?.message}>
                     <input type="number" step="0.01" {...form.register(`priceRules.${index}.price`)} className={compactInputClassName} />
                   </Field>
                   <button
@@ -1222,10 +1248,10 @@ export default function GroupBuyCreatePage() {
           <div className="sticky bottom-4 z-20 flex flex-wrap gap-3 rounded-lg border border-slate-200 bg-white/95 p-3 shadow-lg backdrop-blur">
             <button type="submit" disabled={createMutation.isPending} className={primaryButtonClassName}>
               {createMutation.isPending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
-              提交创建
+              {t("actions.submit")}
             </button>
             <Link href="/group-buy/mine" className={linkButtonClassName}>
-              查看我创建的团购
+              {t("actions.viewMine")}
             </Link>
           </div>
 
@@ -1307,12 +1333,18 @@ function ProductEditor({
   onUpdateSku: (skuIndex: number, patch: Partial<GroupBuySku>) => void;
   onApplyBulk: (selection: BulkSpecSelection) => void;
 }) {
+  const t = useTranslations("CreateGroupBuy");
+  const locale = useLocale();
   const [showCommonSpecManager, setShowCommonSpecManager] = useState(false);
   const [selectedCommonSpecIndex, setSelectedCommonSpecIndex] = useState(0);
   const [showBulkSkuPanel, setShowBulkSkuPanel] = useState(false);
   const [showSkuCode, setShowSkuCode] = useState(false);
   const [bulkSpecSelection, setBulkSpecSelection] = useState<BulkSpecSelection>({});
-  const skuSpecPath = product.specGroups.length ? product.specGroups.map((group) => group.specGroupName).join(" / ") : "默认规格";
+  const skuSpecPath = product.specGroups.length ? product.specGroups.map((group) => group.specGroupName).join(" / ") : t("variants.defaultPath");
+  const categoryOptions = PRODUCT_CATEGORY_OPTIONS.map((category) => ({
+    ...category,
+    label: locale === "en" ? category.nameEn : category.name,
+  }));
 
   function setBulkGroupSelection(groupName: string, valueName?: string) {
     setBulkSpecSelection((current) => {
@@ -1340,15 +1372,15 @@ function ProductEditor({
       <section className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
           <div>
-            <div className="text-base font-black text-slate-950">商品资料</div>
-            <p className="mt-1 text-xs leading-5 text-slate-500">名称、分类和图片决定用户第一眼看到什么。</p>
+            <div className="text-base font-black text-slate-950">{t("productEditor.details")}</div>
+            <p className="mt-1 text-xs leading-5 text-slate-500">{t("productEditor.detailsHelp")}</p>
           </div>
           <span className="rounded-lg bg-slate-50 px-3 py-1 text-xs font-bold text-slate-500 ring-1 ring-slate-200">
-            {product.productImages.length}/{PRODUCT_IMAGE_LIMIT} 张图
+            {t("productEditor.imageCount", { count: product.productImages.length, limit: PRODUCT_IMAGE_LIMIT })}
           </span>
         </div>
         <div className="grid gap-4 lg:grid-cols-2">
-          <Field label="商品名称" hint={`${product.productName.length}/${PRODUCT_NAME_LIMIT}，建议不超过 28 个字`}>
+          <Field label={t("productEditor.name")} hint={t("productEditor.nameHint", { count: product.productName.length, limit: PRODUCT_NAME_LIMIT })}>
             <Input
               value={product.productName}
               maxLength={PRODUCT_NAME_LIMIT}
@@ -1357,22 +1389,22 @@ function ProductEditor({
             />
           </Field>
 
-          <Field label="商品分类" tip="商品分类从已有分类中选择，方便后续商品库管理、筛选和团购展示。">
+          <Field label={t("productEditor.category")} tip={t("productEditor.categoryTip")}>
             <select
               value={product.categoryName ?? ""}
               onChange={(event) => {
-                const option = PRODUCT_CATEGORY_OPTIONS.find((item) => item.name === event.target.value);
+                const option = categoryOptions.find((item) => item.label === event.target.value);
                 onChange({ categoryId: option?.id ?? "", categoryName: event.target.value });
               }}
               className={inputClassName}
             >
-              <option value="">请选择分类</option>
-              {product.categoryName && !PRODUCT_CATEGORY_OPTIONS.some((item) => item.name === product.categoryName) ? (
+              <option value="">{t("productEditor.selectCategory")}</option>
+              {product.categoryName && !categoryOptions.some((item) => item.label === product.categoryName) ? (
                 <option value={product.categoryName}>{product.categoryName}</option>
               ) : null}
-              {PRODUCT_CATEGORY_OPTIONS.map((category) => (
-                <option key={category.id} value={category.name}>
-                  {category.name}
+              {categoryOptions.map((category) => (
+                <option key={category.id} value={category.label}>
+                  {category.label}
                 </option>
               ))}
             </select>
@@ -1385,7 +1417,7 @@ function ProductEditor({
             />
           </div>
 
-          <Field label="价格" tip="团购基础价。开启多规格后，每个 SKU 可以单独设置价格。">
+          <Field label={t("productEditor.price")} tip={t("productEditor.priceTip")}>
             <Input
               type="number"
               step="0.01"
@@ -1394,7 +1426,7 @@ function ProductEditor({
               className={inputClassName}
             />
           </Field>
-          <Field label="成本价" tip="成本价只用于团长核算利润，不展示给参团用户。">
+          <Field label={t("productEditor.costPrice")} tip={t("productEditor.costPriceTip")}>
             <Input
               type="number"
               step="0.01"
@@ -1405,13 +1437,13 @@ function ProductEditor({
           </Field>
 
           <div className="lg:col-span-2">
-            <Field label="商品描述" hint={`${product.productDesc?.length ?? 0}/${PRODUCT_DESC_LIMIT}`}>
+            <Field label={t("productEditor.description")} hint={`${product.productDesc?.length ?? 0}/${PRODUCT_DESC_LIMIT}`}>
               <Textarea
                 rows={5}
                 value={product.productDesc ?? ""}
                 maxLength={PRODUCT_DESC_LIMIT}
                 onChange={(event) => onChange({ productDesc: event.target.value.slice(0, PRODUCT_DESC_LIMIT) })}
-                placeholder="请输入商品具体描述"
+                placeholder={t("productEditor.descriptionPlaceholder")}
                 className={inputClassName}
               />
             </Field>
@@ -1422,20 +1454,20 @@ function ProductEditor({
       <section className="rounded-lg border border-[#FFD3C2] bg-[#FFF8F2] p-4 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <div className="text-lg font-black text-slate-950">多规格</div>
-            <p className="mt-1 text-sm text-slate-500">规格类型可自定义，SKU 会按规格值组合自动生成。</p>
+            <div className="text-lg font-black text-slate-950">{t("variants.title")}</div>
+            <p className="mt-1 text-sm text-slate-500">{t("variants.description")}</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <button type="button" onClick={() => setShowCommonSpecManager((current) => !current)} className="inline-flex h-8 items-center justify-center rounded-lg bg-[#FF724C] px-3 text-xs font-bold text-white transition hover:bg-[#FF8A52]">
-              管理
+              {t("variants.manage")}
             </button>
-            <button type="button" onClick={onAddSpecGroup} className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition hover:border-[#FF724C] hover:text-[#D94D2A]" aria-label="添加规格类型">
+            <button type="button" onClick={onAddSpecGroup} className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition hover:border-[#FF724C] hover:text-[#D94D2A]" aria-label={t("variants.addType")}>
               <Plus className="h-4 w-4" />
             </button>
           </div>
         </div>
         <div className="mt-4 rounded-lg border border-[#FFE0D2] bg-white/85 p-3">
-          <div className="text-sm font-semibold text-slate-700">选择常用规格类型</div>
+          <div className="text-sm font-semibold text-slate-700">{t("variants.commonTypes")}</div>
           <div className="mt-2 flex flex-wrap gap-2">
             {commonSpecGroups.map((group) => (
               <button key={group.name} type="button" onClick={() => onAddCommonSpec(group.name)} className="rounded-lg bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-slate-200 transition hover:bg-[#FFF0E7] hover:text-[#B83A1C] hover:ring-[#FFD3C2]">
@@ -1477,7 +1509,7 @@ function ProductEditor({
           {product.specGroups.map((group, groupIndex) => (
             <div key={`${group.specGroupName}-${groupIndex}`} className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
               <div className="grid gap-3 md:grid-cols-[130px_1fr_auto]">
-                <Field label="规格类型">
+                <Field label={t("variants.type")}>
                   <input
                     value={group.specGroupName}
                     onChange={(event) => onUpdateSpecGroup(groupIndex, { specGroupName: event.target.value })}
@@ -1490,11 +1522,11 @@ function ProductEditor({
                       onChange={(event) => onUpdateSpecGroup(groupIndex, { imageRequired: event.target.checked })}
                       className="h-3.5 w-3.5 accent-[#FF724C]"
                     />
-                    规格值配图
+                    {t("variants.valueImages")}
                   </label>
                 </Field>
                 <div>
-                  <div className="text-sm font-semibold text-slate-700">具体规格</div>
+                  <div className="text-sm font-semibold text-slate-700">{t("variants.values")}</div>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {group.specValues.map((value, valueIndex) => (
                       <span key={`${value.valueName}-${valueIndex}`} className="inline-flex items-center gap-2 rounded-lg bg-[#FFF0E7] px-3 py-1.5 text-sm font-semibold text-[#B83A1C] ring-1 ring-[#FFD3C2]">
@@ -1502,7 +1534,7 @@ function ProductEditor({
                           <label className="grid h-8 w-8 cursor-pointer place-items-center overflow-hidden rounded-md border border-[#FFD3C2] bg-white text-[#D94D2A]">
                             {value.imageUrl ? (
                               // eslint-disable-next-line @next/next/no-img-element
-                              <img src={value.imageUrl} alt={`${value.valueName} 规格图`} className="h-full w-full object-cover" />
+                              <img src={value.imageUrl} alt={`${value.valueName} image`} className="h-full w-full object-cover" />
                             ) : (
                               <ImagePlus className="h-4 w-4" />
                             )}
@@ -1525,7 +1557,7 @@ function ProductEditor({
                       </span>
                     ))}
                     <button type="button" onClick={() => onAddSpecValue(groupIndex)} className="rounded-lg border border-dashed border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-600 hover:border-[#FFB49D] hover:text-[#D94D2A]">
-                      + 添加
+                      + {t("variants.add")}
                     </button>
                   </div>
                 </div>
@@ -1542,7 +1574,7 @@ function ProductEditor({
         <div className="bg-slate-50 p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <div className="text-lg font-black text-slate-950">详细规格</div>
+              <div className="text-lg font-black text-slate-950">{t("variants.details")}</div>
               <p className="mt-1 text-sm text-slate-500">{skuSpecPath}</p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
@@ -1553,14 +1585,14 @@ function ProductEditor({
                   onChange={(event) => setShowSkuCode(event.target.checked)}
                   className="h-3.5 w-3.5 accent-[#FF724C]"
                 />
-                显示商品编码
+                {t("variants.showSkuCode")}
               </label>
               <button
                 type="button"
                 onClick={() => setShowBulkSkuPanel((current) => !current)}
                 className="inline-flex h-8 items-center justify-center rounded-lg bg-[#FF724C] px-3 text-xs font-bold text-white transition hover:bg-[#FF8A52]"
               >
-                批量设置
+                {t("variants.bulkSetup")}
               </button>
             </div>
           </div>
@@ -1569,7 +1601,7 @@ function ProductEditor({
         {showBulkSkuPanel ? (
           <div className="m-4 space-y-3 rounded-lg border border-[#FFD3C2] bg-[#FFF0E7] p-4">
             <div>
-              <div className="text-sm font-black text-slate-950">选择规格</div>
+              <div className="text-sm font-black text-slate-950">{t("variants.selectVariants")}</div>
               <div className="mt-2 grid gap-2">
                 {product.specGroups.length ? (
                   product.specGroups.map((group) => {
@@ -1587,7 +1619,7 @@ function ProductEditor({
                                 : "bg-white text-slate-600 ring-slate-200 hover:ring-[#FFD3C2]"
                             }`}
                           >
-                            全部
+                            {t("variants.all")}
                           </button>
                           {group.specValues.map((value) => {
                             const selected = selectedValues.includes(value.valueName);
@@ -1611,23 +1643,23 @@ function ProductEditor({
                     );
                   })
                 ) : (
-                  <div className="text-sm text-slate-500">当前商品没有多规格，会应用到默认规格。</div>
+                  <div className="text-sm text-slate-500">{t("variants.noVariants")}</div>
                 )}
               </div>
             </div>
 
             <div className="grid gap-2 sm:grid-cols-[1fr_1fr_1fr_auto]">
-              <Field label="价格" tip="应用到选中规格的销售价格。">
-                <input value={product.bulkPrice} onChange={(event) => onChange({ bulkPrice: event.target.value })} placeholder="批量价格" className={compactInputClassName} />
+              <Field label={t("productEditor.price")} tip={t("tips.bulkPrice")}>
+                <input value={product.bulkPrice} onChange={(event) => onChange({ bulkPrice: event.target.value })} placeholder={t("variants.bulkPricePlaceholder")} className={compactInputClassName} />
               </Field>
-              <Field label="成本价" tip="只用于核算利润，不展示给用户。">
-                <input value={product.bulkCostPrice} onChange={(event) => onChange({ bulkCostPrice: event.target.value })} placeholder="批量成本价" className={compactInputClassName} />
+              <Field label={t("productEditor.costPrice")} tip={t("tips.bulkCostPrice")}>
+                <input value={product.bulkCostPrice} onChange={(event) => onChange({ bulkCostPrice: event.target.value })} placeholder={t("variants.bulkCostPlaceholder")} className={compactInputClassName} />
               </Field>
-              <Field label="库存" tip="留空不会覆盖原库存；空库存下单时按不限处理。">
-                <input value={product.bulkStock} onChange={(event) => onChange({ bulkStock: event.target.value })} placeholder="批量库存" className={compactInputClassName} />
+              <Field label={t("variants.stock")} tip={t("tips.bulkStock")}>
+                <input value={product.bulkStock} onChange={(event) => onChange({ bulkStock: event.target.value })} placeholder={t("variants.bulkStockPlaceholder")} className={compactInputClassName} />
               </Field>
               <button type="button" onClick={() => onApplyBulk(bulkSpecSelection)} className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#FF724C] px-4 text-sm font-bold text-white transition hover:bg-[#FF8A52]">
-                应用到选中
+                {t("variants.applySelected")}
               </button>
             </div>
           </div>
@@ -1637,11 +1669,11 @@ function ProductEditor({
           <table className={`w-full border-collapse text-sm ${showSkuCode ? "min-w-[960px]" : "min-w-[760px]"}`}>
             <thead>
               <tr className="bg-slate-100 text-left text-slate-500">
-                <th className="min-w-72 border-b border-slate-200 px-3 py-2">规格组合</th>
-                <th className="border-b border-slate-200 px-3 py-2">价格 *</th>
-                <th className="border-b border-slate-200 px-3 py-2">成本价</th>
-                <th className="border-b border-slate-200 px-3 py-2">库存</th>
-                {showSkuCode ? <th className="border-b border-slate-200 px-3 py-2">商品编码</th> : null}
+                <th className="min-w-72 border-b border-slate-200 px-3 py-2">{t("variants.combination")}</th>
+                <th className="border-b border-slate-200 px-3 py-2">{t("productEditor.price")} *</th>
+                <th className="border-b border-slate-200 px-3 py-2">{t("productEditor.costPrice")}</th>
+                <th className="border-b border-slate-200 px-3 py-2">{t("variants.stock")}</th>
+                {showSkuCode ? <th className="border-b border-slate-200 px-3 py-2">{t("variants.skuCode")}</th> : null}
               </tr>
             </thead>
             <tbody>
@@ -1649,7 +1681,7 @@ function ProductEditor({
                 <tr key={`${sku.skuId ?? skuIndex}-${skuIndex}`} className="odd:bg-white even:bg-slate-50/60">
                   <td className="border-b border-slate-100 px-3 py-2">
                     <div className="whitespace-nowrap font-semibold text-slate-900">
-                      {sku.specValues.length ? sku.specValues.map((item) => item.specValueName).join(" / ") : "默认"}
+                      {sku.specValues.length ? sku.specValues.map((item) => item.specValueName).join(" / ") : t("variants.default")}
                     </div>
                     {sku.specValues.length ? (
                       <div className="mt-1 whitespace-nowrap text-xs text-slate-500">
@@ -1658,17 +1690,17 @@ function ProductEditor({
                     ) : null}
                   </td>
                   <td className="border-b border-slate-100 px-3 py-2">
-                    <input type="number" step="0.01" value={sku.price} placeholder="请输入" onChange={(event) => onUpdateSku(skuIndex, { price: Number(event.target.value) })} className={tableInputClassName} />
+                    <input type="number" step="0.01" value={sku.price} placeholder={t("variants.enter")} onChange={(event) => onUpdateSku(skuIndex, { price: Number(event.target.value) })} className={tableInputClassName} />
                   </td>
                   <td className="border-b border-slate-100 px-3 py-2">
-                    <input type="number" step="0.01" value={sku.costPrice ?? ""} placeholder="请输入" onChange={(event) => onUpdateSku(skuIndex, { costPrice: parseOptionalNumber(event.target.value) ?? null })} className={tableInputClassName} />
+                    <input type="number" step="0.01" value={sku.costPrice ?? ""} placeholder={t("variants.enter")} onChange={(event) => onUpdateSku(skuIndex, { costPrice: parseOptionalNumber(event.target.value) ?? null })} className={tableInputClassName} />
                   </td>
                   <td className="border-b border-slate-100 px-3 py-2">
-                    <input type="number" value={sku.stock ?? ""} placeholder="不限" onChange={(event) => onUpdateSku(skuIndex, { stock: parseOptionalInteger(event.target.value) ?? null })} className={tableInputClassName} />
+                    <input type="number" value={sku.stock ?? ""} placeholder={t("variants.unlimited")} onChange={(event) => onUpdateSku(skuIndex, { stock: parseOptionalInteger(event.target.value) ?? null })} className={tableInputClassName} />
                   </td>
                   {showSkuCode ? (
                     <td className="border-b border-slate-100 px-3 py-2">
-                      <input value={sku.skuCode ?? ""} placeholder="可选" onChange={(event) => onUpdateSku(skuIndex, { skuCode: event.target.value })} className={tableInputClassName} />
+                      <input value={sku.skuCode ?? ""} placeholder={t("variants.optional")} onChange={(event) => onUpdateSku(skuIndex, { skuCode: event.target.value })} className={tableInputClassName} />
                     </td>
                   ) : null}
                 </tr>
@@ -1829,6 +1861,7 @@ function ProductImageUploader({
   images: string[];
   onChange: (images: string[]) => void;
 }) {
+  const t = useTranslations("CreateGroupBuy");
   const currentImages = images.filter(Boolean).slice(0, PRODUCT_IMAGE_LIMIT);
   const remainingSlots = PRODUCT_IMAGE_LIMIT - currentImages.length;
 
@@ -1841,12 +1874,12 @@ function ProductImageUploader({
       return;
     }
     if (remainingSlots <= 0) {
-      toast.error(`商品图片最多 ${PRODUCT_IMAGE_LIMIT} 张`);
+      toast.error(t("productImages.maxError", { limit: PRODUCT_IMAGE_LIMIT }));
       return;
     }
     const selectedFiles = Array.from(files).slice(0, remainingSlots);
     if (files.length > remainingSlots) {
-      toast.message(`最多还能添加 ${remainingSlots} 张，已自动截取前 ${remainingSlots} 张`);
+      toast.message(t("productImages.trimmed", { count: remainingSlots }));
     }
     const nextUrls = selectedFiles.map((file) => URL.createObjectURL(file));
     commit([...currentImages, ...nextUrls]);
@@ -1868,16 +1901,16 @@ function ProductImageUploader({
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <Label>商品图片</Label>
+        <Label>{t("productImages.label")}</Label>
         <span className="text-sm text-slate-500">
-          {currentImages.length}/{PRODUCT_IMAGE_LIMIT}，第一张作为封面
+          {t("productImages.count", { count: currentImages.length, limit: PRODUCT_IMAGE_LIMIT })}
         </span>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
         <Label className="inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 text-sm font-bold text-slate-800 shadow-sm transition hover:border-[#FF724C] hover:text-[#D94D2A]">
           <ImagePlus className="h-4 w-4" />
-          上传图片
+          {t("productImages.upload")}
           <input
             type="file"
             accept="image/*"
@@ -1887,7 +1920,7 @@ function ProductImageUploader({
             disabled={remainingSlots <= 0}
           />
         </Label>
-        <span className="text-sm text-slate-500">最多还能上传 {remainingSlots} 张</span>
+        <span className="text-sm text-slate-500">{t("productImages.remaining", { count: remainingSlots })}</span>
       </div>
 
       {currentImages.length ? (
@@ -1896,10 +1929,10 @@ function ProductImageUploader({
             <div key={`${url}-${index}`} className="group relative overflow-hidden rounded-lg border border-slate-200 bg-slate-50 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
               <button type="button" onClick={() => setCover(index)} className="block aspect-square w-full bg-white">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={url} alt={`商品图片 ${index + 1}`} className="h-full w-full object-cover transition duration-200 group-hover:scale-[1.03]" />
+                <img src={url} alt={t("productImages.alt", { index: index + 1 })} className="h-full w-full object-cover transition duration-200 group-hover:scale-[1.03]" />
               </button>
               {index === 0 ? (
-                <span className="absolute bottom-2 left-2 rounded bg-[#D94D2A]/90 px-2 py-1 text-xs font-bold text-white">封面</span>
+                <span className="absolute bottom-2 left-2 rounded bg-[#D94D2A]/90 px-2 py-1 text-xs font-bold text-white">{t("productImages.cover")}</span>
               ) : null}
               <Button type="button" variant="ghost" size="icon" className="absolute right-2 top-2 h-7 w-7 rounded-lg bg-white/90 text-slate-700 shadow-sm hover:bg-white hover:text-red-600" onClick={() => removeImage(index)}>
                 <Trash2 className="h-3.5 w-3.5" />
@@ -1909,7 +1942,7 @@ function ProductImageUploader({
         </div>
       ) : (
         <div className="flex min-h-28 items-center justify-center rounded-lg border border-dashed border-[#FFD3C2] bg-[#FFF0E7] text-sm font-semibold text-[#B83A1C]">
-          先添加一张商品图片，第一张会作为封面。
+          {t("productImages.empty")}
         </div>
       )}
     </div>
@@ -1919,9 +1952,19 @@ function ProductImageUploader({
 function IntroImageUploader({
   images,
   onChange,
+  label,
+  countText,
+  uploadText,
+  localPreviewText,
+  emptyText,
 }: {
   images: UploadedImage[];
   onChange: (images: UploadedImage[]) => void;
+  label: string;
+  countText: string;
+  uploadText: string;
+  localPreviewText: string;
+  emptyText: string;
 }) {
   function uploadFiles(files: FileList | null) {
     if (!files || files.length === 0) {
@@ -1943,14 +1986,14 @@ function IntroImageUploader({
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <Label>介绍图片</Label>
-        <span className="text-sm text-slate-500">已添加 {images.length} 张，建议 10 张以内</span>
+        <Label>{label}</Label>
+        <span className="text-sm text-slate-500">{countText}</span>
       </div>
 
       <div className="flex flex-wrap gap-2">
         <Label className="inline-flex h-10 cursor-pointer items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 text-sm font-bold text-slate-800 shadow-sm transition hover:border-[#FF724C] hover:text-[#D94D2A]">
           <ImagePlus className="h-4 w-4" />
-          上传图片
+          {uploadText}
           <input
             type="file"
             accept="image/*"
@@ -1959,7 +2002,7 @@ function IntroImageUploader({
             onChange={(event) => uploadFiles(event.target.files)}
           />
         </Label>
-        <div className="text-sm leading-10 text-slate-500">本地文件会先生成预览图。</div>
+        <div className="text-sm leading-10 text-slate-500">{localPreviewText}</div>
       </div>
 
       {images.length ? (
@@ -1978,7 +2021,7 @@ function IntroImageUploader({
         </div>
       ) : (
         <div className="rounded-lg border border-dashed border-[#FFD3C2] bg-[#FFF0E7] px-4 py-8 text-center text-sm font-semibold text-[#B83A1C]">
-          先添加一张介绍图片。
+          {emptyText}
         </div>
       )}
     </div>
@@ -2374,23 +2417,23 @@ function InfoCard({ label, value }: { label: string; value: string }) {
   );
 }
 
-function getProductStatus(product: ProductDraft) {
+function getProductStatus(product: ProductDraft, t: CreateGroupBuyTranslator) {
   if (!product.productName.trim() || product.price <= 0 || (!product.coverImageUrl && product.productImages.length === 0)) {
     return {
-      label: "未完善",
+      label: t("products.incomplete"),
       className: "bg-red-50 text-red-700",
     };
   }
 
   if (product.specGroups.length > 0 && product.skus.some((sku) => sku.price <= 0 || sku.stock == null)) {
     return {
-      label: "待补规格",
+      label: t("products.missingVariants"),
       className: "bg-amber-50 text-amber-700",
     };
   }
 
   return {
-    label: "已完善",
+    label: t("products.complete"),
     className: "bg-[#FFF0E7] text-[#B83A1C]",
   };
 }
@@ -2516,12 +2559,6 @@ function parseOptionalNumber(value: string) {
 function parseOptionalInteger(value: string) {
   const parsed = parseOptionalNumber(value);
   return parsed == null ? null : Math.max(0, Math.floor(parsed));
-}
-
-function formatLogisticsSummary(method?: LogisticsMethod, freightTemplate?: FreightTemplate) {
-  const methodLabel = LOGISTICS_METHOD_OPTIONS.find((option) => option.value === method)?.label ?? "未选择物流方式";
-  const freightLabel = FREIGHT_TEMPLATE_OPTIONS.find((option) => option.value === freightTemplate)?.label;
-  return freightLabel ? `${methodLabel} · ${freightLabel}` : methodLabel;
 }
 
 function toDatetimeLocalInput(date: Date) {

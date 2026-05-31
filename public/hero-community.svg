@@ -4,6 +4,6 @@
   <circle cx="136" cy="76" r="30" fill="#FFD9C9"/>
   <circle cx="176" cy="92" r="26" fill="#D7F1DF"/>
   <rect x="52" y="134" width="216" height="36" rx="18" fill="#0B1024"/>
-  <text x="160" y="158" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="18" font-weight="700">Sunnyvale 社区热拼榜</text>
-  <text x="48" y="198" fill="#334155" font-family="Arial, sans-serif" font-size="16" font-weight="700">示例社区封面图</text>
+  <text x="160" y="158" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="18" font-weight="700">Sunnyvale Trending</text>
+  <text x="48" y="198" fill="#334155" font-family="Arial, sans-serif" font-size="16" font-weight="700">Sample community cover</text>
 </svg>

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import {
   BadgeDollarSign,
   ArrowRight,
@@ -20,6 +21,25 @@ import {
 } from "lucide-react";
 import { AppPageShell } from "@/components/app-page-shell";
 import { getCommunityLocationByPostalCode } from "@/lib/location";
+
+const MOCK_PRODUCT_IMAGES = [
+  "/mock-products/sparkling-juice.png",
+  "/mock-products/milk-bread.png",
+  "/mock-products/hot-pot-base.png",
+  "/mock-products/tea-drinks.png",
+  "/mock-products/office-snacks.png",
+  "/mock-products/family-pantry.png",
+  "/mock-products/rice-crackers.png",
+  "/mock-products/rice-noodle-soup.png",
+];
+
+function getMockProductImage(src: string, offset = 0) {
+  if (!src.startsWith("https://cdn.yamibuy.net/item/")) {
+    return src;
+  }
+
+  return MOCK_PRODUCT_IMAGES[offset % MOCK_PRODUCT_IMAGES.length];
+}
 
 const HERO_BANNERS = [
   {
@@ -216,14 +236,58 @@ const FEATURE_SHELVES = [
 ];
 
 const CATEGORY_ICON_RAIL = [
-  { label: "本地自提", icon: BaggageClaim, href: "/#explore-more" },
-  { label: "新人首单", icon: BadgePercent, href: "/#explore-more" },
-  { label: "今日特价", icon: BadgeDollarSign, href: "/#explore-more" },
-  { label: "即将成团", icon: PackageCheck, href: "/#explore-more" },
-  { label: "轻食减脂", icon: Leaf, href: "/#explore-more" },
-  { label: "百味火锅", icon: CookingPot, href: "/#explore-more" },
-  { label: "家庭补货", icon: HandPlatter, href: "/#explore-more" },
-  { label: "节日礼盒", icon: Gift, href: "/#explore-more" },
+  { label: "本地自提", labelEn: "Local Pickup", icon: BaggageClaim, href: "/#explore-more" },
+  { label: "新人首单", labelEn: "New User Deals", icon: BadgePercent, href: "/#explore-more" },
+  { label: "今日特价", labelEn: "Today Deals", icon: BadgeDollarSign, href: "/#explore-more" },
+  { label: "即将成团", labelEn: "Almost Full", icon: PackageCheck, href: "/#explore-more" },
+  { label: "轻食减脂", labelEn: "Light Meals", icon: Leaf, href: "/#explore-more" },
+  { label: "百味火锅", labelEn: "Hot Pot", icon: CookingPot, href: "/#explore-more" },
+  { label: "家庭补货", labelEn: "Family Restock", icon: HandPlatter, href: "/#explore-more" },
+  { label: "节日礼盒", labelEn: "Gift Boxes", icon: Gift, href: "/#explore-more" },
+];
+
+const HERO_BANNER_COPY_EN = [
+  {
+    eyebrow: "Weekly Hot Group Buy",
+    title: "Spring Restock Picks Local Families Are Joining",
+    subtitle: "Matcha snacks + milk bread + hot pot base",
+    cta: "Join Now",
+  },
+  {
+    eyebrow: "New User Deal",
+    title: "New Users Save Instantly",
+    subtitle: "Low-barrier breakfast restock bundle",
+    cta: "Start a Group",
+  },
+  {
+    eyebrow: "Limited-Time Deal",
+    title: "48-Hour Flash Group",
+    subtitle: "Low prices · Ends today",
+    cta: "View Deals",
+  },
+];
+
+const FEATURE_SHELF_COPY_EN = [
+  {
+    title: "Weekly Hot Deals",
+    items: [
+      { title: "Plum Sparkling Juice Group Buy", badge: "Flash Sale", meta: "6 / 8 joined · 2 needed" },
+      { title: "Osmanthus Rice Wine Weekend Group", badge: "Extra 10% Off", meta: "12 / 15 joined · Ends tonight" },
+      { title: "Milk Bread Breakfast Group", badge: "Breakfast Pick", meta: "18 / 20 joined · 2 needed" },
+      { title: "Oriental Leaf Oolong Tea Group", badge: "Low Price", meta: "7 / 10 joined · Sunday pickup" },
+      { title: "Black Sesame Walnut Powder Group", badge: "31% Off", meta: "11 / 12 joined · Almost full" },
+    ],
+  },
+  {
+    title: "Local Trending Groups",
+    items: [
+      { title: "Sichuan Hot Pot Base Weekend Group", badge: "Community Hit", meta: "27 / 30 joined · 3 needed" },
+      { title: "Matcha Snack Restock Group", badge: "Family Favorite", meta: "8 / 10 joined · Local pickup" },
+      { title: "Breakfast Milk Trial Group", badge: "New User Deal", meta: "14 / 18 joined · First-order friendly" },
+      { title: "Household Tissue Quick Group", badge: "Family Restock", meta: "13 / 16 joined · Pickup tomorrow" },
+      { title: "Weekend Late-Night Snack Group", badge: "Weekly Hit", meta: "22 / 26 joined · Filling fast" },
+    ],
+  },
 ];
 
 const ALMOST_FULL_GROUPS = [
@@ -279,6 +343,48 @@ const ALMOST_FULL_GROUPS = [
       { name: "Irvine 火锅搭子", time: "9 分钟前", item: "锅底", quantity: 1 },
       { name: "社区邻居", time: "21 分钟前", item: "蘸料", quantity: 2 },
       { name: "周末局团友", time: "43 分钟前", item: "饮料", quantity: 1 },
+    ],
+  },
+];
+
+const ALMOST_FULL_GROUPS_COPY_EN = [
+  {
+    title: "Chaoshan Beef Ball Family Restock",
+    community: "San Jose family group",
+    progress: "8 / 10 joined",
+    remaining: "2 needed to form",
+    price: "From $12.99",
+    description: "Multiple bundled products are visible in the group, great for family restocks, weekend meals, and frequent community purchases.",
+    records: [
+      { name: "Jefferson neighbor", time: "18 minutes ago", item: "Beef balls" },
+      { name: "Richmond Hill member", time: "32 minutes ago", item: "Hot pot base" },
+      { name: "Maple family group", time: "1 hour ago", item: "Breakfast milk" },
+    ],
+  },
+  {
+    title: "Hokkaido Milk Bread Breakfast Group",
+    community: "Fremont commuter group",
+    progress: "18 / 20 joined",
+    remaining: "2 needed to form",
+    price: "From $8.99",
+    description: "Multiple bundled products are visible in the group, great for family restocks, weekend meals, and frequent community purchases.",
+    records: [
+      { name: "Fremont breakfast buddy", time: "12 minutes ago", item: "Milk bread" },
+      { name: "Sunnyvale parent", time: "27 minutes ago", item: "Breakfast milk" },
+      { name: "North York new user", time: "56 minutes ago", item: "Cookie bundle" },
+    ],
+  },
+  {
+    title: "Hot Pot Base Weekend Pickup Group",
+    community: "Irvine community leader",
+    progress: "27 / 30 joined",
+    remaining: "3 needed to form",
+    price: "From $15.50",
+    description: "Multiple bundled products are visible in the group, great for family restocks, weekend meals, and frequent community purchases.",
+    records: [
+      { name: "Irvine hot pot friend", time: "9 minutes ago", item: "Soup base" },
+      { name: "Community neighbor", time: "21 minutes ago", item: "Dipping sauce" },
+      { name: "Weekend group member", time: "43 minutes ago", item: "Drinks" },
     ],
   },
 ];
@@ -590,20 +696,103 @@ const CATEGORY_SHOWCASE = [
   },
 ];
 
+const CATEGORY_SHOWCASE_COPY_EN = [
+  {
+    label: "For You",
+    items: [
+      { title: "Plum Sparkling Juice Group", subtitle: "Bay Area office afternoon tea", meta: "6 / 8 joined · 2 needed" },
+      { title: "Osmanthus Rice Wine Group", subtitle: "North York weekend dinner crew", meta: "12 / 15 joined · Ends tonight" },
+      { title: "Luosifen Late-Night Group", subtitle: "Markham student group", meta: "30 / 35 joined · Almost sold out" },
+      { title: "Breakfast Milk Trial Group", subtitle: "New user deal · GTA delivery", meta: "14 / 18 joined · Great first order" },
+      { title: "Office Snack Sharing Group", subtitle: "Downtown team restock", meta: "9 / 12 joined · Ends Friday" },
+      { title: "Family Breakfast Pantry Group", subtitle: "Markham family group", meta: "15 / 18 joined · 3 needed" },
+      { title: "Weekend Late-Night Snack Group", subtitle: "Mississauga night snack group", meta: "22 / 26 joined · Weekly hit" },
+    ],
+  },
+  {
+    label: "Snacks & Drinks",
+    items: [
+      { title: "Matcha Snack Restock Group", subtitle: "Sunnyvale family group", meta: "8 / 10 joined · Local pickup" },
+      { title: "Lemon Sparkling Tea Group", subtitle: "Richmond Hill office group", meta: "9 / 12 joined · Ends at 6 PM" },
+      { title: "Crab-Flavor Broad Bean Group", subtitle: "Mississauga family group", meta: "20 / 24 joined · 4 needed" },
+      { title: "Mango Pomelo Drink Group", subtitle: "Scarborough drink crew", meta: "11 / 14 joined · Weekly bestseller" },
+      { title: "Corn Snack Mini Group", subtitle: "North York TV snack group", meta: "10 / 14 joined · Low-price favorite" },
+      { title: "Juice Case Group Buy", subtitle: "Richmond Hill restock group", meta: "13 / 16 joined · Filling tonight" },
+      { title: "Japanese Rice Cracker Group", subtitle: "GTA sharing group", meta: "8 / 12 joined · New this week" },
+    ],
+  },
+  {
+    label: "Hot Pot & BBQ",
+    items: [
+      { title: "Sichuan Hot Pot Base Group", subtitle: "Irvine community leader", meta: "27 / 30 joined · 3 needed" },
+      { title: "BBQ Sauce Family Restock", subtitle: "Etobicoke weekend BBQ group", meta: "16 / 20 joined · Ends Saturday" },
+      { title: "Spicy Crawfish Night Group", subtitle: "Downtown late-night group", meta: "10 / 12 joined · Ends tonight" },
+      { title: "Skewer Hot Pot Base Group", subtitle: "GTA hot pot crew", meta: "21 / 25 joined · 4 needed" },
+      { title: "Classic Beef Tallow Hot Pot Base", subtitle: "Scarborough hot pot group", meta: "19 / 24 joined · Weekend cutoff" },
+      { title: "Spicy BBQ Dipping Sauce Group", subtitle: "Brampton backyard BBQ group", meta: "11 / 14 joined · 3 needed" },
+      { title: "Mala Hot Pot Meal Kit Group", subtitle: "Downtown after-work group", meta: "9 / 10 joined · Almost full" },
+    ],
+  },
+  {
+    label: "Local Pickup",
+    items: [
+      { title: "Milk Bread Breakfast Pickup", subtitle: "North York subway pickup", meta: "18 / 20 joined · 2 needed" },
+      { title: "Household Tissue Quick Group", subtitle: "Markham supermarket pickup", meta: "13 / 16 joined · Pickup tomorrow" },
+      { title: "Weekend Drink Case Group", subtitle: "Scarborough Sunday pickup", meta: "7 / 10 joined · 3 needed" },
+      { title: "Family Restock Bundle", subtitle: "Richmond Hill community counter", meta: "11 / 12 joined · Almost full" },
+      { title: "Dinner Pantry Pickup Group", subtitle: "Downtown subway pickup", meta: "6 / 8 joined · 2 needed" },
+      { title: "Weekend Beverage Case Group", subtitle: "North York mall pickup", meta: "17 / 20 joined · Sunday pickup" },
+      { title: "Community Bread Breakfast Group", subtitle: "Markham community station", meta: "13 / 15 joined · Ends tomorrow morning" },
+    ],
+  },
+];
+
 export default function HomePage() {
+  const t = useTranslations("HomePage");
+  const locale = useLocale();
+  const isEnglish = locale === "en";
   const userPostalCode = "L4E";
   const communityLocation = getCommunityLocationByPostalCode(userPostalCode);
-  const [selectedCategory, setSelectedCategory] = useState(CATEGORY_SHOWCASE[0]?.value ?? "for-you");
+  const categoryShowcase = CATEGORY_SHOWCASE.map((category, categoryIndex) => ({
+    ...category,
+    ...(isEnglish ? { label: CATEGORY_SHOWCASE_COPY_EN[categoryIndex]?.label ?? category.label } : {}),
+    items: category.items.map((item, itemIndex) => ({
+      ...item,
+      ...(isEnglish ? CATEGORY_SHOWCASE_COPY_EN[categoryIndex]?.items[itemIndex] : {}),
+    })),
+  }));
+  const [selectedCategory, setSelectedCategory] = useState(categoryShowcase[0]?.value ?? "for-you");
   const currentCategory =
-    CATEGORY_SHOWCASE.find((section) => section.value === selectedCategory) ?? CATEGORY_SHOWCASE[0];
+    categoryShowcase.find((section) => section.value === selectedCategory) ?? categoryShowcase[0];
   const featureShelves = FEATURE_SHELVES.map((shelf, index) =>
-    index === 1 && communityLocation
+    isEnglish
+      ? {
+          ...shelf,
+          title: FEATURE_SHELF_COPY_EN[index]?.title ?? shelf.title,
+          items: shelf.items.map((item, itemIndex) => ({
+            ...item,
+            ...(FEATURE_SHELF_COPY_EN[index]?.items[itemIndex] ?? {}),
+          })),
+        }
+      : index === 1 && communityLocation
       ? {
           ...shelf,
           title: `${communityLocation.city} · ${communityLocation.community} 热拼榜`,
         }
       : shelf,
   );
+  const heroBanners = HERO_BANNERS.map((banner, index) => ({
+    ...banner,
+    ...(isEnglish ? HERO_BANNER_COPY_EN[index] : {}),
+  }));
+  const almostFullGroups = ALMOST_FULL_GROUPS.map((group, groupIndex) => ({
+    ...group,
+    ...(isEnglish ? ALMOST_FULL_GROUPS_COPY_EN[groupIndex] : {}),
+    records: group.records.map((record, recordIndex) => ({
+      ...record,
+      ...(isEnglish ? ALMOST_FULL_GROUPS_COPY_EN[groupIndex]?.records[recordIndex] : {}),
+    })),
+  }));
   const showcaseItems = Array.from({ length: 21 }, (_, index) => {
     const item = currentCategory.items[index % currentCategory.items.length];
 
@@ -621,7 +810,7 @@ export default function HomePage() {
       paddingClassName="px-4 sm:px-6 lg:px-8 xl:px-10"
     >
       <section className="grid gap-0 overflow-hidden rounded-[26px] border border-slate-200 bg-white shadow-[0_24px_90px_-45px_rgba(15,23,42,0.38)] lg:grid-cols-12">
-        {HERO_BANNERS.map((banner, index) => (
+        {heroBanners.map((banner, index) => (
           <Link
             key={banner.eyebrow}
             href={banner.href}
@@ -635,7 +824,7 @@ export default function HomePage() {
                 className={`absolute ${product.className} transition duration-500 group-hover:scale-[1.04]`}
               >
                 <Image
-                  src={product.src}
+                  src={getMockProductImage(product.src, index * 3 + productIndex)}
                   alt={product.alt}
                   fill
                   sizes="(min-width: 1280px) 260px, 180px"
@@ -670,15 +859,15 @@ export default function HomePage() {
       <section className="rounded-[28px] border border-rose-100 bg-[linear-gradient(180deg,#fffdfc_0%,#fff7f4_100%)] p-3 shadow-[0_16px_50px_-40px_rgba(244,114,182,0.28)]">
         <div className="rounded-[22px] bg-[linear-gradient(90deg,rgba(255,241,236,0.96)_0%,rgba(255,247,244,0.96)_35%,rgba(255,240,240,0.92)_100%)] px-4 py-2.5 ring-1 ring-rose-100">
           <div className="border-b border-rose-100/80 pb-3">
-            <div className="text-[24px] font-black tracking-tight text-slate-950">全球购</div>
+            <div className="text-[24px] font-black tracking-tight text-slate-950">{t("globalBuy")}</div>
           </div>
 
           <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8">
             {[
-              { label: "满 $49 免运费", icon: Truck },
-              { label: "GTA 本地发货", icon: MapPinned },
-              { label: "当日团当日发", icon: PackageCheck },
-              { label: "正品保障", icon: ShieldCheck },
+              { label: t("perks.freeShipping"), icon: Truck },
+              { label: t("perks.localShipping"), icon: MapPinned },
+              { label: t("perks.sameDay"), icon: PackageCheck },
+              { label: t("perks.authentic"), icon: ShieldCheck },
             ].map((perk) => (
               <div
                 key={perk.label}
@@ -701,7 +890,7 @@ export default function HomePage() {
               <div className="grid h-16 w-16 place-items-center rounded-full bg-slate-50 text-slate-700 ring-1 ring-slate-200 transition group-hover:bg-white group-hover:text-rose-500 group-hover:shadow-[0_18px_40px_-32px_rgba(244,114,182,0.7)]">
                 <item.icon className="h-6 w-6" />
               </div>
-              <div className="text-[13px] font-semibold text-slate-700">{item.label}</div>
+              <div className="text-[13px] font-semibold text-slate-700">{isEnglish ? item.labelEn : item.label}</div>
             </Link>
           ))}
         </div>
@@ -718,7 +907,7 @@ export default function HomePage() {
                 <h2 className="text-[28px] font-black tracking-tight text-slate-950">{shelf.title}</h2>
                 {shelfIndex === 1 && communityLocation ? (
                   <p className="mt-1 text-sm font-medium text-slate-500">
-                    基于邮编 {communityLocation.postalPrefix} 推荐你附近的社区团
+                    {t("localShelfRecommendation", { postalPrefix: communityLocation.postalPrefix })}
                   </p>
                 ) : null}
               </div>
@@ -726,13 +915,13 @@ export default function HomePage() {
                 href={shelf.href}
                 className="inline-flex items-center gap-1.5 text-base font-black text-slate-950 transition hover:text-orange-600"
               >
-                查看全部
+                {t("viewAll")}
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
 
             <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-              {shelf.items.map((item) => (
+              {shelf.items.map((item, itemIndex) => (
                 <Link
                   key={`${shelf.title}-${item.title}`}
                   href={item.href}
@@ -743,7 +932,7 @@ export default function HomePage() {
                       {item.badge}
                     </div>
                     <Image
-                      src={item.image}
+                      src={getMockProductImage(item.image, shelfIndex * 5 + itemIndex)}
                       alt={item.title}
                       fill
                       sizes="(min-width: 1280px) 20vw, (min-width: 768px) 40vw, 100vw"
@@ -776,7 +965,7 @@ export default function HomePage() {
                       </div>
 
                       <div className="text-[12px] font-medium text-slate-500">
-                        已有 {item.participants.length} 人参与
+                        {t("joinedCount", { count: item.participants.length })}
                       </div>
                     </div>
 
@@ -799,20 +988,20 @@ export default function HomePage() {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-orange-600">Almost Full</p>
-              <h2 className="mt-2 text-[28px] font-black tracking-tight text-slate-950">即将成团</h2>
+              <h2 className="mt-2 text-[28px] font-black tracking-tight text-slate-950">{t("almostFull.title")}</h2>
               <p className="mt-2 max-w-2xl text-[14px] leading-6 text-slate-600">
-                这块优先展示差几个人成团的高转化活动，同时把团里的商品直接展示出来。
+                {t("almostFull.description")}
               </p>
             </div>
 
             <div className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-3 py-1 text-sm font-semibold text-orange-700">
               <Clock3 className="h-4 w-4" />
-              差你一个就成团
+              {t("almostFull.badge")}
             </div>
           </div>
 
           <div className="mt-6 grid gap-4">
-            {ALMOST_FULL_GROUPS.map((group) => (
+            {almostFullGroups.map((group, groupIndex) => (
               <Link
                 key={group.title}
                 href={group.href}
@@ -821,8 +1010,8 @@ export default function HomePage() {
                 <div className="grid grid-cols-[1.2fr_0.9fr] gap-2">
                   <div className="relative min-h-[180px] overflow-hidden rounded-[20px] bg-white ring-1 ring-slate-200">
                     <Image
-                      src={group.products[0]}
-                      alt={`${group.title} 主图`}
+                      src={getMockProductImage(group.products[0], groupIndex * 3)}
+                      alt={`${group.title} main image`}
                       fill
                       sizes="(min-width: 1280px) 220px, 100vw"
                       className="object-contain p-3"
@@ -837,8 +1026,8 @@ export default function HomePage() {
                         className="relative min-h-[86px] overflow-hidden rounded-[18px] bg-white ring-1 ring-slate-200"
                       >
                         <Image
-                          src={product}
-                          alt={`${group.title} 副图 ${index + 1}`}
+                          src={getMockProductImage(product, groupIndex * 3 + index + 1)}
+                          alt={`${group.title} product ${index + 2}`}
                           fill
                           sizes="120px"
                           className="object-contain p-2.5"
@@ -856,11 +1045,11 @@ export default function HomePage() {
                     {group.progress} · {group.remaining}
                   </p>
                   <p className="mt-3 text-sm leading-6 text-slate-500">
-                    团内可见多件商品组合，适合家庭补货、周末局或社区高频购买。
+                    {isEnglish ? group.description : "团内可见多件商品组合，适合家庭补货、周末局或社区高频购买。"}
                   </p>
 
                   <div className="mt-5 rounded-[20px] bg-white px-4 py-4 ring-1 ring-slate-200">
-                    <div className="text-sm font-semibold text-slate-900">最近参团</div>
+                    <div className="text-sm font-semibold text-slate-900">{t("almostFull.recent")}</div>
                     <div className="mt-3 grid gap-3">
                       {group.records.map((record, index) => (
                         <div
@@ -889,7 +1078,7 @@ export default function HomePage() {
                 <div className="flex flex-col items-start justify-between gap-4 lg:items-end">
                   <div className="text-[30px] font-black text-orange-600">{group.price}</div>
                   <div className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800">
-                    立即参团
+                    {t("almostFull.joinNow")}
                     <ArrowRight className="h-4 w-4" />
                   </div>
                 </div>
@@ -905,7 +1094,7 @@ export default function HomePage() {
       >
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <h2 className="text-[34px] font-black tracking-tight text-slate-950">探索更多</h2>
+            <h2 className="text-[34px] font-black tracking-tight text-slate-950">{t("explore.title")}</h2>
             <p className="mt-2 text-lg font-semibold text-slate-400">Explore more</p>
           </div>
 
@@ -913,13 +1102,13 @@ export default function HomePage() {
             href={currentCategory ? currentCategory.items[0]?.href ?? "/group-buy/mine" : "/group-buy/mine"}
             className="inline-flex min-w-[168px] items-center justify-center gap-2 self-start whitespace-nowrap rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold !text-white transition hover:bg-slate-800"
           >
-            查看全部团购
+            {t("explore.button")}
             <ArrowRight className="h-4 w-4 text-white" />
           </Link>
         </div>
 
         <div className="mt-5 flex flex-wrap gap-2">
-          {CATEGORY_SHOWCASE.map((category) => {
+          {categoryShowcase.map((category) => {
             const active = category.value === selectedCategory;
 
             return (
@@ -940,7 +1129,7 @@ export default function HomePage() {
         </div>
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
-          {showcaseItems.map((item) => (
+          {showcaseItems.map((item, itemIndex) => (
             <Link
               key={item.key}
               href={item.href}
@@ -952,7 +1141,7 @@ export default function HomePage() {
                 </div>
                 <div className="relative aspect-[1/1]">
                   <Image
-                    src={item.image}
+                    src={getMockProductImage(item.image, itemIndex)}
                     alt={item.title}
                     fill
                     sizes="(min-width: 1536px) 14vw, (min-width: 1024px) 24vw, (min-width: 640px) 40vw, 100vw"
@@ -977,7 +1166,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="inline-flex items-center gap-1 text-[10px] font-semibold text-slate-900">
-                  <span>探索更多</span>
+                  <span>{t("explore.more")}</span>
                 </div>
               </div>
             </Link>

@@ -49,5 +49,217 @@
       "settings": "设置",
       "settingsNote": "团长与团员功能配置"
     }
+  },
+  "CreateGroupBuy": {
+    "sidebar": {
+      "eyebrow": "Create Group Buy",
+      "title": "把商品和规格先搭稳",
+      "description": "先把标题、图文、商品和 SKU 规则整理清楚，后面发货和收货才不会乱。",
+      "introImages": "介绍图",
+      "products": "商品",
+      "currentSku": "当前 SKU",
+      "pricingMode": "当前定价模式",
+      "fulfillment": "履约方式",
+      "account": "当前账号",
+      "notLoggedIn": "未登录"
+    },
+    "status": {
+      "title": "发布前检查",
+      "description": "建议按介绍、设置、商品、价格规则的顺序完成。左侧会一直保留关键状态。",
+      "introReady": "图文已预览",
+      "productCount": "商品 {count}/{limit}",
+      "ruleCount": "规则 {count}"
+    },
+    "intro": {
+      "title": "介绍",
+      "action": "视频字段已预留",
+      "titleLabel": "标题",
+      "imagesLabel": "介绍图片",
+      "imageCount": "已添加 {count} 张，建议 10 张以内",
+      "upload": "上传图片",
+      "localPreview": "本地文件会先生成预览图。",
+      "empty": "先添加一张介绍图片。",
+      "descriptionLabel": "文字描述",
+      "defaultTemplate": "默认说明模板"
+    },
+    "groupRules": {
+      "title": "成团规则",
+      "action": "控制人数门槛和成团方式",
+      "pricingMode": "定价模式",
+      "requiredParticipants": "成团人数",
+      "maxParticipants": "最大人数"
+    },
+    "settings": {
+      "title": "团购设置",
+      "action": "物流、时间和通知在这里统一配置",
+      "logisticsMethod": "物流方式",
+      "logisticsDescription": "可同时开启快递、同城配送、顾客自提",
+      "logisticsHint": "默认物流会在下单页优先展示",
+      "set": "设置",
+      "shipmentTime": "发货时间",
+      "shipmentDescription": "可先留空，成团后再进入管理页处理",
+      "groupTime": "团购时间",
+      "groupTimeDescription": "到结束时间后停止继续参团",
+      "notifyTarget": "开团通知推送",
+      "notifyDescription": "发布后通知哪些用户",
+      "moreSettings": "更多团购设置",
+      "moreSettingsDescription": "优惠设置、帮卖设置、隐私设置",
+      "coupon": "优惠",
+      "assistSale": "帮卖",
+      "pickupAddress": "自提地址",
+      "autoConfirmDays": "自动确认天数",
+      "deliveryRemark": "配送备注"
+    },
+    "products": {
+      "title": "团购商品",
+      "action": "{count}/{limit} 个商品",
+      "description": "建议控制在 {softLimit} 个以内，最多 {hardLimit} 个。商品较多时左侧清单固定定位，右侧只编辑当前商品。",
+      "library": "商品库",
+      "addProduct": "添加商品",
+      "productList": "商品清单",
+      "productListHelp": "点击左侧商品切换编辑",
+      "productIndex": "商品 {index}",
+      "unnamed": "未命名商品",
+      "uncategorized": "未分类",
+      "specCount": "{count} 个规格",
+      "currentEditing": "当前编辑 · 商品 {index}",
+      "copy": "复制",
+      "delete": "删除",
+      "complete": "已完善",
+      "incomplete": "未完善",
+      "missingVariants": "待补规格"
+    },
+    "productEditor": {
+      "details": "商品资料",
+      "detailsHelp": "名称、分类和图片决定用户第一眼看到什么。",
+      "imageCount": "{count}/{limit} 张图",
+      "name": "商品名称",
+      "nameHint": "{count}/{limit}，建议不超过 28 个字",
+      "category": "商品分类",
+      "categoryTip": "商品分类从已有分类中选择，方便后续商品库管理、筛选和团购展示。",
+      "selectCategory": "请选择分类",
+      "price": "价格",
+      "priceTip": "团购基础价。开启多规格后，每个 SKU 可以单独设置价格。",
+      "costPrice": "成本价",
+      "costPriceTip": "成本价只用于团长核算利润，不展示给参团用户。",
+      "description": "商品描述",
+      "descriptionPlaceholder": "请输入商品具体描述"
+    },
+    "productImages": {
+      "label": "商品图片",
+      "count": "{count}/{limit}，第一张作为封面",
+      "upload": "上传图片",
+      "remaining": "最多还能上传 {count} 张",
+      "cover": "封面",
+      "empty": "先添加一张商品图片，第一张会作为封面。",
+      "alt": "商品图片 {index}",
+      "maxError": "商品图片最多 {limit} 张",
+      "trimmed": "最多还能添加 {count} 张，已自动截取前 {count} 张"
+    },
+    "variants": {
+      "title": "多规格",
+      "description": "规格类型可自定义，SKU 会按规格值组合自动生成。",
+      "manage": "管理",
+      "addType": "添加规格类型",
+      "commonTypes": "选择常用规格类型",
+      "type": "规格类型",
+      "valueImages": "规格值配图",
+      "values": "具体规格",
+      "add": "添加",
+      "details": "详细规格",
+      "defaultPath": "默认规格",
+      "showSkuCode": "显示商品编码",
+      "bulkSetup": "批量设置",
+      "selectVariants": "选择规格",
+      "all": "全部",
+      "noVariants": "当前商品没有多规格，会应用到默认规格。",
+      "bulkPricePlaceholder": "批量价格",
+      "bulkCostPlaceholder": "批量成本价",
+      "bulkStockPlaceholder": "批量库存",
+      "applySelected": "应用到选中",
+      "combination": "规格组合",
+      "stock": "库存",
+      "skuCode": "商品编码",
+      "default": "默认",
+      "enter": "请输入",
+      "unlimited": "不限",
+      "optional": "可选"
+    },
+    "priceRules": {
+      "title": "价格规则",
+      "action": "用于参团下单时匹配活动价格",
+      "add": "添加规则",
+      "rule": "规则",
+      "threshold": "满几人成团",
+      "price": "团购价"
+    },
+    "options": {
+      "notifyAll": "全部订阅成员",
+      "notifyJoined": "已参团成员",
+      "notifyNone": "暂不推送",
+      "privacyPublic": "公开可见",
+      "privacyLinkOnly": "仅链接可见"
+    },
+    "defaults": {
+      "title": "周末甜品团",
+      "introText": "预定团，下一次老板出摊后配送。配送到达后请留意消息并及时取餐。",
+      "deliveryNote": "配送到宿舍楼下",
+      "pickupAddress": "宿舍楼下自提点",
+      "deliveryRemark": "同一栋楼有多个订单时，按楼栋通知取餐。"
+    },
+    "sampleProduct": {
+      "name": "八元双拼",
+      "category": "更多好货",
+      "description": "小料可选血糯米、芋泥，奶酪口味可自定义。",
+      "specGroupOne": "小料",
+      "specValueOne": "血糯米",
+      "specValueTwo": "芋泥",
+      "specGroupTwo": "奶酪口味",
+      "specValueThree": "杨枝甘露",
+      "specValueFour": "茉莉青提"
+    },
+    "labels": {
+      "pricingEarlyBird": "早鸟阶梯价",
+      "pricingTiered": "按人数阶梯价",
+      "pricingSuccessOnly": "满足人数才成功",
+      "fulfillmentDelivery": "商家配送",
+      "fulfillmentSelfPickup": "顾客自提",
+      "logisticsLocalBase": "同城配送 · 基础运费",
+      "logisticsSelfPickup": "顾客自提",
+      "logisticsExpress": "快递配送"
+    },
+    "tips": {
+      "bulkPrice": "应用到选中规格的销售价格。",
+      "bulkCostPrice": "只用于核算利润，不展示给用户。",
+      "bulkStock": "留空不会覆盖原库存；空库存下单时按不限处理。"
+    },
+    "actions": {
+      "submit": "提交创建",
+      "viewMine": "查看我创建的团购"
+    }
+  },
+  "HomePage": {
+    "globalBuy": "全球购",
+    "perks": {
+      "freeShipping": "满 $49 免运费",
+      "localShipping": "GTA 本地发货",
+      "sameDay": "当日团当日发",
+      "authentic": "正品保障"
+    },
+    "viewAll": "查看全部",
+    "joinedCount": "已有 {count} 人参与",
+    "localShelfRecommendation": "基于邮编 {postalPrefix} 推荐你附近的社区团",
+    "almostFull": {
+      "title": "即将成团",
+      "description": "这块优先展示差几个人成团的高转化活动，同时把团里的商品直接展示出来。",
+      "badge": "差你一个就成团",
+      "recent": "最近参团",
+      "joinNow": "立即参团"
+    },
+    "explore": {
+      "title": "探索更多",
+      "button": "查看全部团购",
+      "more": "探索更多"
+    }
   }
 }
