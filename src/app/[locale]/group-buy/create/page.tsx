@@ -116,12 +116,25 @@ type FreightPayScope = "EVERY_ORDER" | "FIRST_ORDER";
 type FreightAmountMode = "FIXED" | "BY_QUANTITY";
 type ReceiverField = "CONTACT" | "PHONE" | "ADDRESS";
 
-const DEFAULT_COMMON_SPEC_GROUPS: CommonSpecGroup[] = [
+const DEFAULT_COMMON_SPEC_GROUPS_ZH: CommonSpecGroup[] = [
   { name: "小料", values: ["血糯米", "芋泥"] },
   { name: "奶酪口味", values: ["杨枝甘露", "茉莉青提", "香草", "蓝莓"] },
   { name: "重量", values: ["100g", "200g", "300g"] },
   { name: "尺码", values: ["S", "M", "L"] },
 ];
+
+const DEFAULT_COMMON_SPEC_GROUPS_EN: CommonSpecGroup[] = [
+  { name: "Add-ons", values: ["Sticky rice", "Taro paste"] },
+  { name: "Cheese flavor", values: ["Mango pomelo", "Jasmine grape", "Vanilla", "Blueberry"] },
+  { name: "Weight", values: ["100g", "200g", "300g"] },
+  { name: "Size", values: ["S", "M", "L"] },
+];
+
+function createDefaultCommonSpecGroups(locale: string): CommonSpecGroup[] {
+  const source = locale === "en" ? DEFAULT_COMMON_SPEC_GROUPS_EN : DEFAULT_COMMON_SPEC_GROUPS_ZH;
+
+  return source.map((group) => ({ ...group, values: [...group.values] }));
+}
 
 const PRODUCT_SOFT_LIMIT = 10;
 const PRODUCT_HARD_LIMIT = 30;
@@ -154,33 +167,53 @@ const DEFAULT_INTRO_TEXT = `⭐预定团，下一次老板出摊后配送
 const LOGISTICS_METHOD_OPTIONS: Array<{
   value: LogisticsMethod;
   label: string;
+  labelEn: string;
   description: string;
+  descriptionEn: string;
 }> = [
-  { value: "EXPRESS", label: "快递", description: "适合跨区域发货，可单独设置运费" },
-  { value: "LOCAL_DELIVERY", label: "同城配送", description: "团长配送时引导团员扫码核销或确认收货" },
-  { value: "SELF_PICKUP", label: "顾客自提", description: "适合固定自提点、宿舍楼下或门店取货" },
+  {
+    value: "EXPRESS",
+    label: "快递",
+    labelEn: "Express",
+    description: "适合跨区域发货，可单独设置运费",
+    descriptionEn: "Best for cross-area shipping with a separate freight fee.",
+  },
+  {
+    value: "LOCAL_DELIVERY",
+    label: "同城配送",
+    labelEn: "Local delivery",
+    description: "团长配送时引导团员扫码核销或确认收货",
+    descriptionEn: "Use local delivery and guide members to confirm receipt.",
+  },
+  {
+    value: "SELF_PICKUP",
+    label: "顾客自提",
+    labelEn: "Self pickup",
+    description: "适合固定自提点、宿舍楼下或门店取货",
+    descriptionEn: "Best for pickup points, dorm lobbies, or store pickup.",
+  },
 ];
 
-const FREIGHT_TEMPLATE_OPTIONS: Array<{ value: FreightTemplate; label: string }> = [
-  { value: "BASE", label: "基础运费" },
-  { value: "FREE_BY_AMOUNT", label: "满额包配送" },
-  { value: "FREE_BY_QUANTITY", label: "满多件包配送" },
+const FREIGHT_TEMPLATE_OPTIONS: Array<{ value: FreightTemplate; label: string; labelEn: string }> = [
+  { value: "BASE", label: "基础运费", labelEn: "Base freight" },
+  { value: "FREE_BY_AMOUNT", label: "满额包配送", labelEn: "Free by amount" },
+  { value: "FREE_BY_QUANTITY", label: "满多件包配送", labelEn: "Free by quantity" },
 ];
 
-const FREIGHT_PAY_SCOPE_OPTIONS: Array<{ value: FreightPayScope; label: string }> = [
-  { value: "EVERY_ORDER", label: "每笔订单均需支付" },
-  { value: "FIRST_ORDER", label: "仅首笔订单需支付" },
+const FREIGHT_PAY_SCOPE_OPTIONS: Array<{ value: FreightPayScope; label: string; labelEn: string }> = [
+  { value: "EVERY_ORDER", label: "每笔订单均需支付", labelEn: "Every order pays" },
+  { value: "FIRST_ORDER", label: "仅首笔订单需支付", labelEn: "First order only" },
 ];
 
-const FREIGHT_AMOUNT_MODE_OPTIONS: Array<{ value: FreightAmountMode; label: string }> = [
-  { value: "FIXED", label: "固定运费" },
-  { value: "BY_QUANTITY", label: "按件计费" },
+const FREIGHT_AMOUNT_MODE_OPTIONS: Array<{ value: FreightAmountMode; label: string; labelEn: string }> = [
+  { value: "FIXED", label: "固定运费", labelEn: "Fixed freight" },
+  { value: "BY_QUANTITY", label: "按件计费", labelEn: "By quantity" },
 ];
 
-const RECEIVER_FIELD_OPTIONS: Array<{ value: ReceiverField; label: string }> = [
-  { value: "CONTACT", label: "联系人" },
-  { value: "PHONE", label: "电话" },
-  { value: "ADDRESS", label: "地址" },
+const RECEIVER_FIELD_OPTIONS: Array<{ value: ReceiverField; label: string; labelEn: string }> = [
+  { value: "CONTACT", label: "联系人", labelEn: "Contact" },
+  { value: "PHONE", label: "电话", labelEn: "Phone" },
+  { value: "ADDRESS", label: "地址", labelEn: "Address" },
 ];
 
 function createSampleProduct(t: CreateGroupBuyTranslator): ProductDraft {
@@ -238,7 +271,7 @@ export default function GroupBuyCreatePage() {
   const [libraryItems, setLibraryItems] = useState<GroupBuyProduct[]>([]);
   const [showProductLibrary, setShowProductLibrary] = useState(false);
   const [showLogisticsDialog, setShowLogisticsDialog] = useState(false);
-  const [commonSpecGroups, setCommonSpecGroups] = useState<CommonSpecGroup[]>(() => DEFAULT_COMMON_SPEC_GROUPS);
+  const [commonSpecGroups, setCommonSpecGroups] = useState<CommonSpecGroup[]>(() => createDefaultCommonSpecGroups(locale));
 
   const form = useForm<FormInput, unknown, FormOutput>({
     resolver: zodResolver(schema),
@@ -486,7 +519,7 @@ export default function GroupBuyCreatePage() {
 
   function addCustomReceiverField() {
     const current = (form.getValues("customReceiverFields") ?? []) as string[];
-    form.setValue("customReceiverFields", [...current, `自定义项${current.length + 1}`], { shouldDirty: true });
+    form.setValue("customReceiverFields", [...current, locale === "en" ? `Custom field ${current.length + 1}` : `自定义项${current.length + 1}`], { shouldDirty: true });
   }
 
   function updateCustomReceiverField(index: number, value: string) {
@@ -525,7 +558,7 @@ export default function GroupBuyCreatePage() {
       localId: `product-${Date.now()}`,
       productId: product?.productId ?? "",
       sourceProductId: product?.productId ?? null,
-      productName: product?.productName ?? "新团购商品",
+      productName: product?.productName ?? (locale === "en" ? "New group-buy product" : "新团购商品"),
       productImages: product?.productImages?.length ? product.productImages.slice(0, PRODUCT_IMAGE_LIMIT) : [],
       coverImageUrl: product?.coverImageUrl ?? product?.productImages?.[0] ?? "",
       price: product?.price ?? 1,
@@ -560,7 +593,7 @@ export default function GroupBuyCreatePage() {
       localId: `product-copy-${Date.now()}`,
       productId: "",
       sourceProductId: target.sourceProductId ?? target.productId ?? null,
-      productName: `${target.productName || "未命名商品"} 副本`,
+      productName: `${target.productName || t("products.unnamed")} ${locale === "en" ? "copy" : "副本"}`,
       displayOrder: products.length + 1,
       skus: target.skus.map((sku, index) => ({
         ...sku,
@@ -635,7 +668,10 @@ export default function GroupBuyCreatePage() {
   }
 
   function addCommonSpecPreset() {
-    setCommonSpecGroups((current) => [...current, { name: "新规格", values: ["规格1"] }]);
+    setCommonSpecGroups((current) => [
+      ...current,
+      { name: locale === "en" ? "New variant" : "新规格", values: [locale === "en" ? "Option 1" : "规格1"] },
+    ]);
   }
 
   function updateCommonSpecPreset(index: number, patch: Partial<CommonSpecGroup>) {
@@ -651,7 +687,9 @@ export default function GroupBuyCreatePage() {
   function addCommonSpecPresetValue(index: number) {
     setCommonSpecGroups((current) =>
       current.map((group, groupIndex) =>
-        groupIndex === index ? { ...group, values: [...group.values, `规格${group.values.length + 1}`] } : group,
+        groupIndex === index
+          ? { ...group, values: [...group.values, locale === "en" ? `Option ${group.values.length + 1}` : `规格${group.values.length + 1}`] }
+          : group,
       ),
     );
   }
@@ -702,10 +740,10 @@ export default function GroupBuyCreatePage() {
       specGroups: [
         ...target.specGroups,
         {
-          specGroupName: "自定义规格",
+          specGroupName: locale === "en" ? "Custom variant" : "自定义规格",
           imageRequired: false,
           displayOrder: target.specGroups.length + 1,
-          specValues: [{ valueName: "规格1", displayOrder: 1 }],
+          specValues: [{ valueName: locale === "en" ? "Option 1" : "规格1", displayOrder: 1 }],
         },
       ],
     });
@@ -757,7 +795,7 @@ export default function GroupBuyCreatePage() {
         specValues: [
           ...group.specValues,
           {
-            valueName: `规格${group.specValues.length + 1}`,
+            valueName: locale === "en" ? `Option ${group.specValues.length + 1}` : `规格${group.specValues.length + 1}`,
             displayOrder: group.specValues.length + 1,
           },
         ],
@@ -1039,21 +1077,21 @@ export default function GroupBuyCreatePage() {
               <div className="mt-4 rounded-lg border border-[#FFD3C2] bg-[#FFF0E7] p-3 shadow-sm">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <div className="text-sm font-black text-slate-950">商品库导入</div>
-                    <div className="mt-1 text-xs text-slate-500">搜索商品名称或规格，导入后可以继续编辑图片、价格和规格。</div>
+                    <div className="text-sm font-black text-slate-950">{t("products.libraryTitle")}</div>
+                    <div className="mt-1 text-xs text-slate-500">{t("products.libraryDescription")}</div>
                   </div>
-                  <span className="rounded-lg bg-white px-3 py-1 text-xs font-bold text-[#D94D2A] ring-1 ring-[#FFD3C2]">可批量导入</span>
+                  <span className="rounded-lg bg-white px-3 py-1 text-xs font-bold text-[#D94D2A] ring-1 ring-[#FFD3C2]">{t("products.libraryBatch")}</span>
                 </div>
                 <div className="mt-3 grid gap-2 md:grid-cols-[1fr_auto]">
                   <Input
                     value={libraryKeyword}
                     onChange={(event) => setLibraryKeyword(event.target.value)}
-                    placeholder="搜索商品名称、规格"
+                    placeholder={t("products.libraryPlaceholder")}
                     className={compactInputClassName}
                   />
                   <Button type="button" onClick={searchLibrary} variant="dark" className="h-10 rounded-lg px-4">
                     {libraryMutation.isPending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-                    搜索
+                    {t("products.search")}
                   </Button>
                 </div>
                 {libraryItems.length ? (
@@ -1066,7 +1104,7 @@ export default function GroupBuyCreatePage() {
                         className="rounded-lg bg-white p-3 text-left text-sm shadow-sm ring-1 ring-slate-200 transition hover:bg-[#FFF0E7] hover:ring-[#FFD3C2]"
                       >
                         <div className="font-bold text-slate-950">{item.productName}</div>
-                        <div className="mt-1 text-slate-500">¥{item.price} · {item.categoryName || "未分类"}</div>
+                        <div className="mt-1 text-slate-500">¥{item.price} · {item.categoryName || t("products.uncategorized")}</div>
                       </button>
                     ))}
                   </div>
@@ -1133,11 +1171,11 @@ export default function GroupBuyCreatePage() {
                             </DropdownMenuItem>
                             <DropdownMenuItem disabled={index === 0} onSelect={() => moveProduct(product.localId, -1)}>
                               <ArrowUp className="h-4 w-4" />
-                              上移
+                              {t("products.moveUp")}
                             </DropdownMenuItem>
                             <DropdownMenuItem disabled={index === products.length - 1} onSelect={() => moveProduct(product.localId, 1)}>
                               <ArrowDown className="h-4 w-4" />
-                              下移
+                              {t("products.moveDown")}
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem disabled={products.length === 1} onSelect={() => removeProduct(product.localId)} className="text-red-600 focus:text-red-700">
@@ -1738,6 +1776,8 @@ function CommonSpecManagerDialog({
   onUpdateValue: (index: number, valueIndex: number, value: string) => void;
   onRemoveValue: (index: number, valueIndex: number) => void;
 }) {
+  const t = useTranslations("CreateGroupBuy");
+
   if (!open) {
     return null;
   }
@@ -1753,16 +1793,16 @@ function CommonSpecManagerDialog({
       >
         <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-4 py-3">
           <div>
-            <div className="text-lg font-black text-slate-950">管理常见规格</div>
-            <p className="mt-1 text-xs text-slate-500">维护快捷规格类型，不会自动改动已添加到当前商品里的规格。</p>
+            <div className="text-lg font-black text-slate-950">{t("commonSpecs.title")}</div>
+            <p className="mt-1 text-xs text-slate-500">{t("commonSpecs.description")}</p>
           </div>
           <div className="flex gap-2">
             <Button type="button" variant="secondary" className="h-8 rounded-lg px-3 text-xs" onClick={onAddGroup}>
               <Plus className="h-4 w-4" />
-              添加常见规格
+              {t("commonSpecs.addGroup")}
             </Button>
             <Button type="button" variant="secondary" className="h-8 rounded-lg px-3 text-xs" onClick={() => onOpenChange(false)}>
-              完成
+              {t("commonSpecs.done")}
             </Button>
             <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-lg" onClick={() => onOpenChange(false)}>
               <X className="h-4 w-4" />
@@ -1772,7 +1812,7 @@ function CommonSpecManagerDialog({
 
         <div className="grid min-h-0 flex-1 overflow-hidden lg:grid-cols-[280px_1fr]">
           <aside className="min-h-0 overflow-y-auto border-b border-slate-200 bg-slate-50 p-3 lg:border-b-0 lg:border-r">
-            <div className="text-sm font-bold text-slate-700">常见规格列表</div>
+            <div className="text-sm font-bold text-slate-700">{t("commonSpecs.list")}</div>
             <div className="mt-2 space-y-2">
               {groups.map((group, index) => (
                 <button
@@ -1784,10 +1824,10 @@ function CommonSpecManagerDialog({
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <div className="truncate text-sm font-black text-slate-950">{group.name || "未命名规格"}</div>
+                    <div className="truncate text-sm font-black text-slate-950">{group.name || t("commonSpecs.unnamed")}</div>
                     <span className="shrink-0 rounded-lg bg-slate-100 px-2 py-1 text-xs text-slate-500">{group.values.length}</span>
                   </div>
-                  <div className="mt-1 line-clamp-1 text-xs leading-5 text-slate-500">{group.values.filter(Boolean).join(" / ") || "暂无默认规格值"}</div>
+                  <div className="mt-1 line-clamp-1 text-xs leading-5 text-slate-500">{group.values.filter(Boolean).join(" / ") || t("commonSpecs.noValues")}</div>
                 </button>
               ))}
             </div>
@@ -1798,7 +1838,7 @@ function CommonSpecManagerDialog({
               <div className="space-y-4">
                 <div className="flex flex-wrap items-end justify-between gap-3">
                   <div className="min-w-64 flex-1">
-                    <Field label="规格组名称">
+                    <Field label={t("commonSpecs.groupName")}>
                       <Input
                         value={activeGroup.name}
                         onChange={(event) => onUpdateGroup(activeIndex, { name: event.target.value })}
@@ -1809,7 +1849,7 @@ function CommonSpecManagerDialog({
                   <div className="flex gap-2">
                     <Button type="button" variant="secondary" className="h-9 rounded-lg border-dashed px-3 text-xs" onClick={() => onAddValue(activeIndex)}>
                       <Plus className="h-4 w-4" />
-                      添加规格值
+                      {t("commonSpecs.addValue")}
                     </Button>
                     <Button
                       type="button"
@@ -1819,13 +1859,13 @@ function CommonSpecManagerDialog({
                       disabled={groups.length === 1}
                     >
                       <Trash2 className="h-4 w-4" />
-                      删除
+                      {t("commonSpecs.delete")}
                     </Button>
                   </div>
                 </div>
 
                 <div>
-                  <div className="text-sm font-semibold text-slate-700">默认规格值</div>
+                  <div className="text-sm font-semibold text-slate-700">{t("commonSpecs.defaultValues")}</div>
                   <div className="mt-2 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
                     {activeGroup.values.map((value, valueIndex) => (
                       <div key={`common-spec-value-${activeIndex}-${valueIndex}`} className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5">
@@ -1844,7 +1884,7 @@ function CommonSpecManagerDialog({
               </div>
             ) : (
               <div className="flex min-h-64 items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 text-sm text-slate-500">
-                先添加一个常见规格。
+                {t("commonSpecs.empty")}
               </div>
             )}
           </main>
@@ -2189,6 +2229,10 @@ function LogisticsSettingsDialog({
   onRemoveCustomReceiverField: (index: number) => void;
   onResetReceiverFields: () => void;
 }) {
+  const t = useTranslations("CreateGroupBuy");
+  const locale = useLocale();
+  const isEnglish = locale === "en";
+
   if (!open) {
     return null;
   }
@@ -2201,12 +2245,12 @@ function LogisticsSettingsDialog({
       >
         <header className="flex flex-wrap items-center justify-between gap-3 border-b border-[#FFD3C2] bg-[#FFF8F2] px-4 py-3">
           <div>
-            <div className="text-lg font-black text-slate-950">物流方式</div>
-            <p className="mt-1 text-xs text-slate-500">一次团购选择一种物流方式，再配置对应的配送运费。</p>
+            <div className="text-lg font-black text-slate-950">{t("logisticsDialog.title")}</div>
+            <p className="mt-1 text-xs text-slate-500">{t("logisticsDialog.description")}</p>
           </div>
           <div className="flex gap-2">
             <Button type="button" variant="secondary" className="h-8 rounded-lg px-3 text-xs" onClick={() => onOpenChange(false)}>
-              确定
+              {t("logisticsDialog.confirm")}
             </Button>
             <Button type="button" variant="ghost" size="icon" className="h-8 w-8 rounded-lg" onClick={() => onOpenChange(false)}>
               <X className="h-4 w-4" />
@@ -2228,7 +2272,7 @@ function LogisticsSettingsDialog({
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <div className="text-base font-black text-slate-950">{option.label}</div>
+                    <div className="text-base font-black text-slate-950">{isEnglish ? option.labelEn : option.label}</div>
                     <span
                       className={`grid h-6 w-6 place-items-center rounded-full border text-xs font-black ${
                         selected ? "border-[#FF724C] bg-[#FF724C] text-white" : "border-slate-200 bg-white text-transparent"
@@ -2237,8 +2281,8 @@ function LogisticsSettingsDialog({
                       ✓
                     </span>
                   </div>
-                  <p className="mt-2 text-xs leading-5 text-slate-500">{option.description}</p>
-                  {selected ? <div className="mt-4 inline-flex h-8 items-center rounded-lg bg-[#FF724C] px-3 text-xs font-bold text-white">已选择</div> : null}
+                  <p className="mt-2 text-xs leading-5 text-slate-500">{isEnglish ? option.descriptionEn : option.description}</p>
+                  {selected ? <div className="mt-4 inline-flex h-8 items-center rounded-lg bg-[#FF724C] px-3 text-xs font-bold text-white">{t("logisticsDialog.selected")}</div> : null}
                 </button>
               );
             })}
@@ -2255,14 +2299,14 @@ function LogisticsSettingsDialog({
                     freightTemplate === option.value ? "border-[#FF724C] text-[#D94D2A]" : "border-transparent text-slate-500 hover:text-slate-900"
                   }`}
                 >
-                  {option.label}
+                  {isEnglish ? option.labelEn : option.label}
                 </button>
               ))}
             </div>
 
             <div className="space-y-5 bg-slate-50 p-4">
               <div>
-                <div className="text-sm font-black text-slate-950">运费设置</div>
+                <div className="text-sm font-black text-slate-950">{t("logisticsDialog.freightSettings")}</div>
                 <div className="mt-3 flex flex-wrap gap-3">
                   {FREIGHT_PAY_SCOPE_OPTIONS.map((option) => (
                     <button
@@ -2275,7 +2319,7 @@ function LogisticsSettingsDialog({
                           : "bg-white text-slate-700 ring-slate-200 hover:text-[#D94D2A] hover:ring-[#FFD3C2]"
                       }`}
                     >
-                      {option.label}
+                      {isEnglish ? option.labelEn : option.label}
                     </button>
                   ))}
                 </div>
@@ -2283,7 +2327,7 @@ function LogisticsSettingsDialog({
 
               {freightTemplate === "BASE" ? (
                 <div>
-                  <div className="text-sm font-black text-slate-950">金额设置</div>
+                  <div className="text-sm font-black text-slate-950">{t("logisticsDialog.amountSettings")}</div>
                   <div className="mt-3 flex flex-wrap gap-3">
                     {FREIGHT_AMOUNT_MODE_OPTIONS.map((option) => (
                       <button
@@ -2296,27 +2340,27 @@ function LogisticsSettingsDialog({
                             : "bg-white text-slate-700 ring-slate-200 hover:text-[#D94D2A] hover:ring-[#FFD3C2]"
                         }`}
                       >
-                        {option.label}
+                        {isEnglish ? option.labelEn : option.label}
                       </button>
                     ))}
                   </div>
                   {freightAmountMode === "FIXED" ? (
                     <div className="mt-3 grid gap-3 sm:grid-cols-[120px_1fr_auto]">
-                      <div className="self-center text-sm text-slate-500">配送运费</div>
+                      <div className="self-center text-sm text-slate-500">{t("logisticsDialog.deliveryFreight")}</div>
                       <input value={baseFreightAmount} onChange={(event) => onSetBaseFreightAmount(event.target.value)} className={settingInputClassName} />
-                      <div className="self-center text-sm text-slate-500">元</div>
+                      <div className="self-center text-sm text-slate-500">{t("logisticsDialog.currencyUnit")}</div>
                     </div>
                   ) : (
                     <div className="mt-3 grid gap-3 lg:grid-cols-[auto_96px_auto_96px_auto_96px_auto_96px_auto]">
-                      <span className="self-center text-sm text-slate-500">订单低于</span>
+                      <span className="self-center text-sm text-slate-500">{t("logisticsDialog.orderBelow")}</span>
                       <input value={freightBaseQuantity} onChange={(event) => onSetFreightBaseQuantity(event.target.value)} className={settingInputClassName} />
-                      <span className="self-center text-sm text-slate-500">件配送运费</span>
+                      <span className="self-center text-sm text-slate-500">{t("logisticsDialog.itemsFreight")}</span>
                       <input value={baseFreightAmount} onChange={(event) => onSetBaseFreightAmount(event.target.value)} className={settingInputClassName} />
-                      <span className="self-center text-sm text-slate-500">元，每次增加</span>
+                      <span className="self-center text-sm text-slate-500">{t("logisticsDialog.currencyIncrease")}</span>
                       <input value={freightQuantityStep} onChange={(event) => onSetFreightQuantityStep(event.target.value)} className={settingInputClassName} />
-                      <span className="self-center text-sm text-slate-500">件，运费增加</span>
+                      <span className="self-center text-sm text-slate-500">{t("logisticsDialog.itemsIncrease")}</span>
                       <input value={freightStepAmount} onChange={(event) => onSetFreightStepAmount(event.target.value)} className={settingInputClassName} />
-                      <span className="self-center text-sm text-slate-500">元</span>
+                      <span className="self-center text-sm text-slate-500">{t("logisticsDialog.currencyUnit")}</span>
                     </div>
                   )}
                 </div>
@@ -2324,28 +2368,28 @@ function LogisticsSettingsDialog({
 
               {freightTemplate === "FREE_BY_AMOUNT" ? (
                 <div className="grid gap-3 sm:grid-cols-[auto_1fr_auto]">
-                  <span className="self-center text-sm text-slate-500">订单金额满</span>
+                  <span className="self-center text-sm text-slate-500">{t("logisticsDialog.orderAmountOver")}</span>
                   <input value={freeShippingAmount} onChange={(event) => onSetFreeShippingAmount(event.target.value)} className={settingInputClassName} />
-                  <span className="self-center text-sm text-slate-500">元包配送</span>
+                  <span className="self-center text-sm text-slate-500">{t("logisticsDialog.freeShippingAmountUnit")}</span>
                 </div>
               ) : null}
 
               {freightTemplate === "FREE_BY_QUANTITY" ? (
                 <div className="grid gap-3 sm:grid-cols-[auto_1fr_auto]">
-                  <span className="self-center text-sm text-slate-500">订单商品满</span>
+                  <span className="self-center text-sm text-slate-500">{t("logisticsDialog.orderItemsOver")}</span>
                   <input value={freeShippingQuantity} onChange={(event) => onSetFreeShippingQuantity(event.target.value)} className={settingInputClassName} />
-                  <span className="self-center text-sm text-slate-500">件包配送</span>
+                  <span className="self-center text-sm text-slate-500">{t("logisticsDialog.freeShippingQuantityUnit")}</span>
                 </div>
               ) : null}
 
               <div>
-                <div className="text-sm font-black text-slate-950">配送说明</div>
+                <div className="text-sm font-black text-slate-950">{t("logisticsDialog.deliveryNote")}</div>
                 <textarea
                   value={deliveryNote}
                   onChange={(event) => onSetDeliveryNote(event.target.value.slice(0, 50))}
                   rows={4}
                   className="mt-3 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-[#FF724C]"
-                  placeholder="例如：配送到宿舍楼下"
+                  placeholder={t("logisticsDialog.deliveryNotePlaceholder")}
                 />
                 <div className="mt-1 text-right text-xs text-slate-400">{deliveryNote.length}/50</div>
               </div>
@@ -2355,16 +2399,16 @@ function LogisticsSettingsDialog({
           <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <div className="text-sm font-black text-slate-950">需要用户填写信息</div>
-                <div className="mt-1 text-xs text-slate-500">请勿违法违规收集个人信息。</div>
+                <div className="text-sm font-black text-slate-950">{t("logisticsDialog.receiverInfo")}</div>
+                <div className="mt-1 text-xs text-slate-500">{t("logisticsDialog.receiverInfoTip")}</div>
               </div>
               <div className="flex gap-2">
                 <button type="button" onClick={onAddCustomReceiverField} className={compactSecondaryButtonClassName}>
                   <Plus className="h-4 w-4" />
-                  添加自定义项
+                  {t("logisticsDialog.addCustomField")}
                 </button>
                 <button type="button" onClick={onResetReceiverFields} className={compactSecondaryButtonClassName}>
-                  重置
+                  {t("logisticsDialog.reset")}
                 </button>
               </div>
             </div>
@@ -2377,7 +2421,7 @@ function LogisticsSettingsDialog({
                     onChange={() => onToggleReceiverField(option.value)}
                     className="h-3.5 w-3.5 accent-[#FF724C]"
                   />
-                  {option.label}
+                  {isEnglish ? option.labelEn : option.label}
                 </label>
               ))}
             </div>
@@ -2388,7 +2432,7 @@ function LogisticsSettingsDialog({
                     <input
                       value={field}
                       onChange={(event) => onUpdateCustomReceiverField(index, event.target.value)}
-                      placeholder="请输入自定义项名称"
+                      placeholder={t("logisticsDialog.customFieldPlaceholder")}
                       className="min-w-0 flex-1 bg-transparent text-sm outline-none"
                     />
                     <button type="button" onClick={() => onRemoveCustomReceiverField(index)} className="text-slate-400 hover:text-red-600">
